@@ -49,8 +49,10 @@ function CataloguePage() {
       setEquipmentList(getStoredEquipment());
     }
     window.addEventListener("omnicore-equipment-updated", onUpdate);
+    window.addEventListener("storage", onUpdate);
     return () => {
       window.removeEventListener("omnicore-equipment-updated", onUpdate);
+      window.removeEventListener("storage", onUpdate);
     };
   }, []);
 

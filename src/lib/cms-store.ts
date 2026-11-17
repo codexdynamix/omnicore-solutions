@@ -27,7 +27,6 @@ export type ExtendedEquipment = Equipment & {
   stockStatus?: "In Yard Cranborne" | "In Transit (Beitbridge)" | "Active on Site" | "Special Order";
   throughput?: string;
   powerOption?: string;
-  priceUSD?: string;
   condition?: "New" | "Refurbished / Certified";
   warrantyMonths?: number;
   detailedNotes?: string;
@@ -528,13 +527,15 @@ export function getStoredEquipment(): ExtendedEquipment[] {
   }
 }
 
-export function saveStoredEquipment(items: ExtendedEquipment[]) {
-  if (typeof window === "undefined") return;
+export function saveStoredEquipment(items: ExtendedEquipment[]): boolean {
+  if (typeof window === "undefined") return false;
   try {
     localStorage.setItem(STORAGE_KEY_EQUIPMENT, JSON.stringify(items));
     window.dispatchEvent(new CustomEvent("omnicore-equipment-updated"));
+    return true;
   } catch {
     announceStorageError(new Error("Could not save equipment data in this browser."));
+    return false;
   }
 }
 

@@ -10,6 +10,8 @@ export function EquipmentCard({ item }: { item: Equipment }) {
   const message = `Hello Omnicore, I would like to inquire about the ${item.name} (${item.intent === "hire" ? "Hire" : "Purchase"}). Please provide current availability and pricing.`;
 
   const allPhotos = [item.image, ...(item.gallery || [])].filter(Boolean);
+  const displayPrice = item.priceUSD || item.price || item.priceNote || "Inquire for quote";
+  const priceTerms = item.priceNote && item.priceNote !== displayPrice ? item.priceNote : undefined;
 
   return (
     <>
@@ -90,8 +92,9 @@ export function EquipmentCard({ item }: { item: Equipment }) {
                 {item.intent === "hire" ? "Hire Rate" : "Indicative Price"}
               </span>
               <span className="text-xs font-semibold text-[#1d1d1f]">
-                {item.price ?? item.priceNote ?? "Inquire for quote"}
+                {displayPrice}
               </span>
+              {priceTerms && <span className="mt-0.5 block text-[10px] text-[#6e6e73]">{priceTerms}</span>}
             </div>
 
             <div className="flex items-center gap-1.5">
@@ -125,7 +128,7 @@ export function EquipmentCard({ item }: { item: Equipment }) {
         title={item.name}
         category={item.category}
         spec={item.spec}
-        price={item.price ?? item.priceNote}
+        price={displayPrice}
         intent={item.intent}
         images={allPhotos}
       />

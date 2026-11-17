@@ -290,6 +290,7 @@ export type Equipment = {
   gallery?: string[];
   spec?: string;
   price?: string;
+  priceUSD?: string;
   priceNote?: string;
   badge?: string;
 };

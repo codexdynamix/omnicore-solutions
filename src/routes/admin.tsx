@@ -333,6 +333,12 @@ function AdminBackoffice() {
     }
   }
 
+  function submitEditingGalleryUrl() {
+    if (!editingGalleryUrl.trim()) return;
+    handleAddGalleryUrl(editingGalleryUrl, true);
+    setEditingGalleryUrl("");
+  }
+
   const [activeTab, setActiveTab] = useState<Tab>("crm");
   const [clients, setClients] = useState<CRMClient[]>(getStoredCRMClients);
   const [equipmentList, setEquipmentList] = useState<ExtendedEquipment[]>(getStoredEquipment);
@@ -366,6 +372,7 @@ function AdminBackoffice() {
   const [peekProductId, setPeekProductId] = useState<string | null>(null);
   const [productProfileOpen, setProductProfileOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<ExtendedEquipment | null>(null);
+  const [editingGalleryUrl, setEditingGalleryUrl] = useState("");
   const [showAddProductModal, setShowAddProductModal] = useState(false);
   const [newProdName, setNewProdName] = useState("");
   const [newProdCategory, setNewProdCategory] = useState<ExtendedEquipment["category"]>("mining");
@@ -685,7 +692,14 @@ function AdminBackoffice() {
   function handleCreateProduct(e: React.FormEvent) {
     e.preventDefault();
     if (!newProdName.trim()) return;
-    const newId = newProdName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const baseId = newProdName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "machine";
+    let newId = baseId;
+    let suffix = 2;
+    while (equipmentList.some((item) => item.id === newId)) {
+      newId = `${baseId}-${suffix}`;
+      suffix += 1;
+    }
+    const price = newProdPrice.trim() || "Tender on Request";
     const newEquip: ExtendedEquipment = {
       id: newId,
       name: newProdName.trim(),
@@ -700,14 +714,15 @@ function AdminBackoffice() {
       stockStatus: "In Yard Cranborne",
       throughput: newProdThroughput.trim() || "Site Rated",
       powerOption: newProdPower.trim() || "Electric 3-Phase / Diesel",
-      priceUSD: newProdPrice.trim() || "Tender on Request",
+      priceUSD: price,
+      price,
       condition: "New",
       warrantyMonths: 12,
       detailedNotes: "Full parts backup and field commissioning from Cranborne yard.",
     };
     const updated = [newEquip, ...equipmentList];
+    if (!saveStoredEquipment(updated)) return;
     setEquipmentList(updated);
-    saveStoredEquipment(updated);
     setShowAddProductModal(false);
     triggerToast(`Added ${newEquip.name} to catalogue`);
     setNewProdName("");
@@ -927,12 +942,15 @@ function AdminBackoffice() {
   function handleSaveProduct(e: React.FormEvent) {
     e.preventDefault();
     if (!editingProduct) return;
+    const price = (editingProduct.priceUSD || editingProduct.price || "").trim();
+    const productToSave = { ...editingProduct, priceUSD: price, price };
     const updated = equipmentList.map((item) =>
-      item.id === editingProduct.id ? editingProduct : item,
+      item.id === productToSave.id ? productToSave : item,
     );
+    if (!saveStoredEquipment(updated)) return;
     setEquipmentList(updated);
-    saveStoredEquipment(updated);
-    triggerToast(`Updated ${editingProduct.name}`);
+    setEditingProduct(productToSave);
+    triggerToast(`Updated ${productToSave.name}`);
   }
 
   function handleDeleteProduct(id: string) {
@@ -1058,8 +1076,8 @@ function AdminBackoffice() {
       }
       return item;
     });
+    if (!saveStoredEquipment(updated)) return;
     setEquipmentList(updated);
-    saveStoredEquipment(updated);
     triggerToast("Stock status updated");
   }
 
@@ -1341,7 +1359,10 @@ function AdminBackoffice() {
   function stepProduct(delta: number) {
     if (productNavIndex < 0 || !editingProduct) return;
     const next = filteredProducts[productNavIndex + delta];
-    if (next) setEditingProduct(next);
+    if (next) {
+      setEditingGalleryUrl("");
+      setEditingProduct(next);
+    }
   }
 
   function openClientProfile(id: string) {
@@ -1351,6 +1372,7 @@ function AdminBackoffice() {
 
   function openProductProfile(item: ExtendedEquipment) {
     setPeekProductId(null);
+    setEditingGalleryUrl("");
     setEditingProduct(item);
     setProductProfileOpen(true);
   }
@@ -1362,6 +1384,7 @@ function AdminBackoffice() {
 
   function closeProductProfile() {
     setProductProfileOpen(false);
+    setEditingGalleryUrl("");
     setEditingProduct(null);
   }
 
@@ -2579,6 +2602,57 @@ function AdminBackoffice() {
                   onNext={() => stepProduct(1)}
                 />
 
+                <section className="rounded-3xl border border-[#0071e3]/15 bg-[#F4F8FF] p-5 sm:p-6">
+                  <div className="flex flex-col gap-4 xl:flex-row xl:items-end">
+                    <div className="xl:w-64 xl:shrink-0">
+                      <h3 className="text-sm font-semibold text-[#1D1D1F]">Quick price & rate update</h3>
+                      <p className="mt-1 text-xs leading-relaxed text-[#6E6E73]">
+                        This price appears on the public catalogue. Saving updates this browser only.
+                      </p>
+                    </div>
+                    <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
+                      <div>
+                        <label className="mb-1 block text-xs font-medium text-[#1D1D1F]">
+                          Price / hire rate
+                        </label>
+                        <input
+                          type="text"
+                          value={editingProduct.priceUSD || editingProduct.price || ""}
+                          onChange={(e) =>
+                            setEditingProduct({
+                              ...editingProduct,
+                              priceUSD: e.target.value,
+                              price: e.target.value,
+                            })
+                          }
+                          placeholder="e.g. $4,800 USD or $180/hr dry"
+                          className="h-10 w-full rounded-xl border border-black/[0.08] bg-white px-3 text-sm text-[#1D1D1F] focus:border-[#0071e3] focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-xs font-medium text-[#1D1D1F]">
+                          Price terms or note
+                        </label>
+                        <input
+                          type="text"
+                          value={editingProduct.priceNote || ""}
+                          onChange={(e) =>
+                            setEditingProduct({ ...editingProduct, priceNote: e.target.value })
+                          }
+                          placeholder="e.g. FOB Cranborne or wet / dry options"
+                          className="h-10 w-full rounded-xl border border-black/[0.08] bg-white px-3 text-sm text-[#1D1D1F] focus:border-[#0071e3] focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      className="inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-[#1D1D1F] px-5 text-xs font-semibold text-white transition-colors hover:bg-black"
+                    >
+                      Save price & product
+                    </button>
+                  </div>
+                </section>
+
                 <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
                   {/* Left Main Specifications Column */}
                   <div className="space-y-6 lg:col-span-8">
@@ -2862,31 +2936,28 @@ function AdminBackoffice() {
 
                           {/* Add extra URL directly to gallery */}
                           <div className="pt-1">
-                            <form
-                              onSubmit={(e) => {
-                                e.preventDefault();
-                                const form = e.currentTarget;
-                                const input = form.elements.namedItem("extraUrl") as HTMLInputElement;
-                                if (input && input.value) {
-                                  handleAddGalleryUrl(input.value, true);
-                                  input.value = "";
-                                }
-                              }}
-                              className="flex items-center gap-1.5"
-                            >
+                            <div className="flex items-center gap-1.5">
                               <input
                                 type="text"
-                                name="extraUrl"
+                                value={editingGalleryUrl}
+                                onChange={(e) => setEditingGalleryUrl(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    submitEditingGalleryUrl();
+                                  }
+                                }}
                                 placeholder="Paste extra photo URL..."
                                 className="flex-1 h-8 rounded-lg border border-black/[0.08] bg-white px-2.5 text-[11px] font-mono focus:outline-none focus:ring-1 focus:ring-black/20"
                               />
                               <button
-                                type="submit"
+                                type="button"
+                                onClick={submitEditingGalleryUrl}
                                 className="h-8 px-3 rounded-lg bg-[#1D1D1F] text-white text-[11px] font-semibold hover:bg-black transition-all shrink-0 cursor-pointer"
                               >
                                 + Add URL
                               </button>
-                            </form>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -2952,38 +3023,6 @@ function AdminBackoffice() {
                             <option value="sale">Outright Sale</option>
                             <option value="hire">Plant Hire / Rental</option>
                           </select>
-                        </div>
-
-                        <div>
-                          <label className="mb-1 block font-medium text-[#1D1D1F]">
-                            Indicative Rate / Price USD
-                          </label>
-                          <input
-                            type="text"
-                            value={editingProduct.priceUSD || editingProduct.price || ""}
-                            onChange={(e) =>
-                              setEditingProduct({
-                                ...editingProduct,
-                                priceUSD: e.target.value,
-                                price: e.target.value,
-                              })
-                            }
-                            placeholder="e.g. $4,800 USD or $180/hr dry"
-                            className="h-9 w-full rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-[#1D1D1F] focus:bg-white focus:outline-none"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="mb-1 block font-medium text-[#1D1D1F]">
-                            Price Note / Terms
-                          </label>
-                          <input
-                            type="text"
-                            value={editingProduct.priceNote || ""}
-                            onChange={(e) => setEditingProduct({ ...editingProduct, priceNote: e.target.value })}
-                            placeholder="e.g. FOB Cranborne Yard or Wet / Dry Options"
-                            className="h-9 w-full rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-[#1D1D1F] focus:bg-white focus:outline-none"
-                          />
                         </div>
 
                         <div>
