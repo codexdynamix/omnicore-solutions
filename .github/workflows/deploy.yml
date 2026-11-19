@@ -9,9 +9,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: hostinger-production
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -43,3 +48,9 @@ jobs:
           password: ${{ secrets.HOSTINGER_PASSWORD }}
           local-dir: dist/
           server-dir: ./
+
+      - name: Verify published commit and PHP API
+        run: node scripts/verify-hostinger-deploy.mjs
+        env:
+          HOSTINGER_SITE_URL: https://zippy-antiquewhite-deer-63.hostingersite.com
+          EXPECTED_COMMIT: ${{ github.sha }}

@@ -5,6 +5,21 @@ import { resolve, join, dirname } from "node:path";
 
 console.log("[build:hostinger] Starting production build for Hostinger...");
 
+const requiredEnvironment = [
+  "HOSTINGER_DB_HOST",
+  "HOSTINGER_DB_NAME",
+  "HOSTINGER_DB_USER",
+  "HOSTINGER_DB_PASSWORD",
+  "CRM_ADMIN_EMAIL",
+  "CRM_ADMIN_PASSWORD",
+];
+const missingEnvironment = requiredEnvironment.filter((name) => !process.env[name]);
+if (missingEnvironment.length > 0) {
+  throw new Error(
+    `Missing required deployment environment variables: ${missingEnvironment.join(", ")}`,
+  );
+}
+
 const distDir = resolve("dist");
 
 // 1. Clean existing dist directory
@@ -31,11 +46,17 @@ if (existsSync(publicDir)) {
   cpSync(publicDir, distDir, { recursive: true });
 }
 
-// 5. Deploy PHP/MySQL API and generated private credentials
-const serverDir = resolve("server");
-if (existsSync(serverDir)) {
-  cpSync(serverDir, distDir, { recursive: true });
+// 5. Deploy the PHP API at the URL path used by the frontend
+const apiSourceDir = resolve("server", "api");
+const apiDestDir = join(distDir, "api");
+for (const file of ["auth.php", "common.php", "crm.php"]) {
+  if (!existsSync(join(apiSourceDir, file))) {
+    throw new Error(`Required PHP API file is missing: ${join(apiSourceDir, file)}`);
+  }
 }
+cpSync(apiSourceDir, apiDestDir, { recursive: true });
+
+// Generate private credentials outside the public API directory
 const privateDir = join(distDir, "private");
 mkdirSync(privateDir, { recursive: true });
 const escapePhpString = (value) => String(value ?? "")
@@ -45,14 +66,20 @@ const escapePhpString = (value) => String(value ?? "")
   .replace(/\n/g, "");
 const phpConfig = `<?php
 // Generated during deployment. Never commit database credentials.
-define("DB_HOST", "${escapePhpString(process.env.HOSTINGER_DB_HOST)}");
-define("DB_NAME", "${escapePhpString(process.env.HOSTINGER_DB_NAME)}");
-define("DB_USER", "${escapePhpString(process.env.HOSTINGER_DB_USER)}");
-define("DB_PASSWORD", "${escapePhpString(process.env.HOSTINGER_DB_PASSWORD)}");
-define("ADMIN_EMAIL", "${escapePhpString(process.env.CRM_ADMIN_EMAIL)}");
-define("ADMIN_PASSWORD", "${escapePhpString(process.env.CRM_ADMIN_PASSWORD)}");
+define("DB_HOST", '${escapePhpString(process.env.HOSTINGER_DB_HOST)}');
+define("DB_NAME", '${escapePhpString(process.env.HOSTINGER_DB_NAME)}');
+define("DB_USER", '${escapePhpString(process.env.HOSTINGER_DB_USER)}');
+define("DB_PASSWORD", '${escapePhpString(process.env.HOSTINGER_DB_PASSWORD)}');
+define("ADMIN_EMAIL", '${escapePhpString(process.env.CRM_ADMIN_EMAIL)}');
+define("ADMIN_PASSWORD", '${escapePhpString(process.env.CRM_ADMIN_PASSWORD)}');
 `;
 writeFileSync(join(privateDir, "config.php"), phpConfig, "utf8");
+
+writeFileSync(
+  join(distDir, "deploy-version.json"),
+  `${JSON.stringify({ commit: process.env.GITHUB_SHA || "local" }, null, 2)}\n`,
+  "utf8",
+);
 // 5. Detect latest production JS and CSS bundles
 const assetsDir = join(distDir, "assets");
 let mainJsFile = "";
@@ -319,10 +346,15 @@ const htaccessContent = `# =====================================================
 
   # Block direct access to generated database credentials
   RewriteRule ^private/ - [F,L]
+  # Hide the old source-tree path left by earlier deployments
+  RewriteRule ^server/ - [F,L]
 
   # Backoffice Ã¢â‚¬â€ map /admin before Hostinger/directory rules can 404 it
   RewriteRule ^admin$ /admin.html [L]
   RewriteRule ^admin/$ /admin.html [L]
+
+  # API requests must reach PHP and must never fall through to the SPA
+  RewriteRule ^api/ - [L]
 
   # Don't rewrite real existing files
   RewriteCond %{REQUEST_FILENAME} -f
@@ -346,6 +378,9 @@ const htaccessContent = `# =====================================================
 </IfModule>
 
 <IfModule mod_headers.c>
+  <FilesMatch "^(index\\.html|deploy-version\\.json)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
   <FilesMatch "\\.(jpg|jpeg|png|gif|svg|webp|ico|css|js|woff2)$">
     Header set Cache-Control "max-age=2592000, public"
   </FilesMatch>
