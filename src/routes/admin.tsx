@@ -1588,14 +1588,15 @@ function AdminBackoffice() {
                     Omnicore Backoffice
                   </span>
                   <span className="rounded-full bg-black/[0.05] px-2 py-0.5 text-[10px] font-medium text-[#6E6E73]">
-                    Harare Operations
+                    <span className="sm:hidden">Harare</span>
+                    <span className="hidden sm:inline">Harare Operations</span>
                   </span>
                 </div>
               </div>
             </Link>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => setActiveTab("profile")}
@@ -1617,15 +1618,17 @@ function AdminBackoffice() {
               </span>
             </button>
 
-            <span className="rounded-full border border-amber-200 bg-amber-50 px-3.5 py-1.5 text-xs font-semibold text-amber-800">
-              MySQL · authenticated
+            <span className="whitespace-nowrap rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1.5 text-xs font-semibold text-amber-800 sm:px-3.5">
+              <span className="sm:hidden">MySQL</span>
+              <span className="hidden sm:inline">MySQL · authenticated</span>
             </span>
 
             <Link
               to="/"
-              className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white px-4 py-1.5 text-xs font-medium text-[#1D1D1F] shadow-2xs hover:bg-[#F5F5F7] transition-all active:scale-95"
+              aria-label="Public Website"
+              className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white px-2.5 py-1.5 text-xs font-medium text-[#1D1D1F] shadow-2xs hover:bg-[#F5F5F7] transition-all active:scale-95 sm:px-4"
             >
-              <span>Public Website</span>
+              <span className="hidden sm:inline">Public Website</span>
               <ExternalLink className="size-3 text-[#86868B]" />
             </Link>
           </div>
