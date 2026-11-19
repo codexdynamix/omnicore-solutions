@@ -12,11 +12,11 @@ export interface AdminProfile {
 const PROFILE_STORAGE_KEY = "omnicore_admin_profile";
 
 export const DEFAULT_ADMIN_PROFILE: AdminProfile = {
-  email: "admin@omnicore.co.zw",
-  fullName: "Harare Operations Administrator",
-  role: "Lead Plant & Inventory Manager",
-  phone: "+263 77 733 4569",
-  yardLocation: "115 Chiremba Road, Cranborne, Harare",
+  email: "",
+  fullName: "",
+  role: "",
+  phone: "",
+  yardLocation: "",
 };
 
 export function getStoredAdminProfile(): AdminProfile {
@@ -25,7 +25,10 @@ export function getStoredAdminProfile(): AdminProfile {
     const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
     if (!raw) return DEFAULT_ADMIN_PROFILE;
     const parsed = JSON.parse(raw);
-    return { ...DEFAULT_ADMIN_PROFILE, ...parsed };
+    const isLegacyDemoProfile =
+      parsed.email === "admin@omnicore.co.zw" ||
+      parsed.fullName === "Harare Operations Administrator";
+    return isLegacyDemoProfile ? DEFAULT_ADMIN_PROFILE : { ...DEFAULT_ADMIN_PROFILE, ...parsed };
   } catch {
     return DEFAULT_ADMIN_PROFILE;
   }
