@@ -244,11 +244,11 @@ function ConfirmModal({
 }) {
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/45 p-4 backdrop-blur-sm"
+      className="crm-modal-overlay fixed inset-0 z-[70] flex items-center justify-center bg-black/45 p-4 backdrop-blur-sm"
       onClick={onCancel}
     >
       <div
-        className="w-full max-w-md rounded-2xl border border-black/[0.08] bg-white p-5 shadow-2xl"
+        className="crm-modal-panel w-full max-w-md rounded-2xl border border-black/[0.08] bg-white p-5 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start gap-3">
@@ -1575,11 +1575,11 @@ function AdminBackoffice() {
       )}
 
       {/* Top Apple Bar */}
-      <header className="sticky top-0 z-40 border-b border-black/[0.06] bg-white/85 backdrop-blur-xl">
+      <header className="crm-topbar sticky top-0 z-40 border-b border-black/[0.06] bg-white/85 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-[1720px] w-full items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <Link to="/admin" className="flex items-center gap-2.5 group">
-              <div className="flex size-8 items-center justify-center rounded-xl bg-[#1D1D1F] text-white text-xs font-bold shadow-xs">
+            <Link to="/admin" className="crm-brand-link flex items-center gap-2.5 group">
+              <div className="crm-brand-mark flex size-8 items-center justify-center rounded-xl bg-[#1D1D1F] text-white text-xs font-bold shadow-xs">
                 O
               </div>
               <div>
@@ -1636,11 +1636,11 @@ function AdminBackoffice() {
 
       </header>
 
-      <div className="mx-auto flex w-full max-w-[1720px] flex-col gap-5 px-4 py-6 sm:px-6 lg:flex-row lg:items-start lg:gap-6 lg:px-8">
-        <aside className="lg:sticky lg:top-24 lg:w-60 lg:shrink-0">
+      <div className="crm-workspace-shell mx-auto flex w-full max-w-[1720px] flex-col gap-5 px-4 py-6 sm:px-6 lg:flex-row lg:items-start lg:gap-6 lg:px-8">
+        <aside className="crm-sidebar lg:sticky lg:top-24 lg:w-60 lg:shrink-0">
           <nav
             aria-label="CRM sections"
-            className="flex gap-1.5 overflow-x-auto rounded-2xl border border-black/[0.06] bg-white p-2 shadow-xs lg:flex-col lg:overflow-visible"
+            className="crm-sidebar-nav flex gap-1.5 overflow-x-auto rounded-2xl border border-black/[0.06] bg-white p-2 shadow-xs lg:flex-col lg:overflow-visible"
           >
             {[
               { id: "crm", label: "Clients & CRM Pipeline", icon: Users, count: filteredClients.length },
@@ -2440,11 +2440,11 @@ function AdminBackoffice() {
 
             {peekClient && !profileClientId && (
               <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+                className="crm-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
                 onClick={() => setPeekClientId(null)}
               >
                 <div
-                  className="w-full max-w-md rounded-2xl border border-black/[0.08] bg-white p-5 shadow-2xl"
+                  className="crm-modal-panel w-full max-w-md rounded-2xl border border-black/[0.08] bg-white p-5 shadow-2xl"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -2539,8 +2539,8 @@ function AdminBackoffice() {
 
                         {/* Modal: New Client / Deal */}
             {showAddClientModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-150">
-                <div className="w-full max-w-xl rounded-2xl border border-black/[0.08] bg-white p-6 shadow-2xl">
+              <div className="crm-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-150">
+                <div className="crm-modal-panel w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-black/[0.08] bg-white p-6 shadow-2xl">
                   <div className="flex items-center justify-between border-b border-black/[0.06] pb-3">
                     <h3 className="text-sm font-semibold text-[#1D1D1F]">
                       Create New Client / Tender Lead
@@ -2629,7 +2629,7 @@ function AdminBackoffice() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="font-medium text-[#1D1D1F] block mb-1">Division</label>
                         <select
@@ -3799,11 +3799,11 @@ function AdminBackoffice() {
 
             {peekProduct && !productProfileOpen && (
               <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+                className="crm-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
                 onClick={() => setPeekProductId(null)}
               >
                 <div
-                  className="w-full max-w-md rounded-2xl border border-black/[0.08] bg-white p-5 shadow-2xl"
+                  className="crm-modal-panel w-full max-w-md rounded-2xl border border-black/[0.08] bg-white p-5 shadow-2xl"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -3880,8 +3880,8 @@ function AdminBackoffice() {
 
                         {/* Modal: Add New Equipment */}
             {showAddProductModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-150">
-                <div className="w-full max-w-xl rounded-2xl border border-black/[0.08] bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+              <div className="crm-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-150">
+                <div className="crm-modal-panel w-full max-w-2xl rounded-2xl border border-black/[0.08] bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
                   <div className="flex items-center justify-between border-b border-black/[0.06] pb-3">
                     <h3 className="text-sm font-semibold text-[#1D1D1F]">
                       Add Machinery to Cranborne Catalogue
@@ -6722,8 +6722,8 @@ function AdminBackoffice() {
 
             {/* Modal: Add or Edit Field Deployment */}
             {showDeployModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-150">
-                <div className="w-full max-w-2xl rounded-2xl border border-black/[0.08] bg-white p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
+              <div className="crm-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-150">
+                <div className="crm-modal-panel w-full max-w-2xl rounded-2xl border border-black/[0.08] bg-white p-6 shadow-2xl max-h-[92vh] overflow-y-auto">
                   <div className="flex items-center justify-between border-b border-black/[0.06] pb-3">
                     <div>
                       <h3 className="text-base font-semibold text-[#1D1D1F]">
