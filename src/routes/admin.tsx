@@ -1631,9 +1631,14 @@ function AdminBackoffice() {
           </div>
         </div>
 
-        {/* Clean iOS Navigation Segmented Control */}
-        <div className="mx-auto max-w-[1720px] w-full px-4 sm:px-6 lg:px-8 pb-3">
-          <div className="inline-flex w-full sm:w-auto items-center overflow-x-auto rounded-xl bg-black/[0.05] p-1 text-xs">
+      </header>
+
+      <div className="mx-auto flex w-full max-w-[1720px] flex-col gap-5 px-4 py-6 sm:px-6 lg:flex-row lg:items-start lg:gap-6 lg:px-8">
+        <aside className="lg:sticky lg:top-24 lg:w-60 lg:shrink-0">
+          <nav
+            aria-label="CRM sections"
+            className="flex gap-1.5 overflow-x-auto rounded-2xl border border-black/[0.06] bg-white p-2 shadow-xs lg:flex-col lg:overflow-visible"
+          >
             {[
               { id: "crm", label: "Clients & CRM Pipeline", icon: Users, count: filteredClients.length },
               { id: "products", label: "Machinery Inventory", icon: Package, count: equipmentList.length },
@@ -1646,7 +1651,9 @@ function AdminBackoffice() {
               const isActive = activeTab === tab.id;
               return (
                 <button
+                  type="button"
                   key={tab.id}
+                  aria-current={isActive ? "page" : undefined}
                   onClick={() => {
                     setActiveTab(tab.id as Tab);
                     setPeekClientId(null);
@@ -1658,19 +1665,19 @@ function AdminBackoffice() {
                     setSelectedProductIds([]);
                     setSelectedBinIds([]);
                   }}
-                  className={`flex flex-1 sm:flex-initial items-center justify-center gap-2 rounded-lg px-4 py-1.5 font-medium transition-all ${
+                  className={`flex min-w-max items-center gap-3 rounded-xl px-3 py-3 text-left text-xs font-medium transition-all lg:w-full ${
                     isActive
-                      ? "bg-white text-[#1D1D1F] shadow-xs font-semibold"
-                      : "text-[#6E6E73] hover:text-[#1D1D1F]"
+                      ? "bg-[#1D1D1F] text-white shadow-xs"
+                      : "text-[#6E6E73] hover:bg-[#F5F5F7] hover:text-[#1D1D1F]"
                   }`}
                 >
-                  <Icon className="size-3.5" />
-                  <span>{tab.label}</span>
+                  <Icon className={`size-4 shrink-0 ${isActive ? "text-white" : "text-[#86868B]"}`} />
+                  <span className="flex-1">{tab.label}</span>
                   {tab.count !== undefined && (
                     <span
-                      className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                      className={`rounded-full px-2 py-0.5 text-[10px] ${
                         isActive
-                          ? "bg-black/[0.06] text-[#1D1D1F]"
+                          ? "bg-white/15 text-white"
                           : "bg-black/[0.04] text-[#86868B]"
                       }`}
                     >
@@ -1680,12 +1687,11 @@ function AdminBackoffice() {
                 </button>
               );
             })}
-          </div>
-        </div>
-      </header>
+          </nav>
+        </aside>
 
       {/* Main Workspace Body */}
-      <main className="mx-auto max-w-[1720px] w-full px-4 py-6 sm:px-6 lg:px-8">
+      <main className="min-w-0 flex-1">
         <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-900">
           Database-backed CRM: changes are stored in the Hostinger MySQL database and require an authenticated administrator session.
         </div>
@@ -7447,6 +7453,7 @@ function AdminBackoffice() {
           </div>
         )}
       </main>
+      </div>
 
       {pendingConfirm && pendingAction && (
         <ConfirmModal
