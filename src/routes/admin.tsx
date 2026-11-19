@@ -4200,9 +4200,9 @@ function AdminBackoffice() {
         {/* TAB 3: SITE COPY & CMS WRITER */}
         {/* ========================================================================= */}
         {activeTab === "cms" && (
-          <div className="w-full space-y-6">
+          <div className="crm-cms-page w-full space-y-6">
             {/* Top Control Bar with Quick Actions */}
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 rounded-3xl bg-white p-5 sm:p-6 border border-black/[0.06] shadow-xs">
+            <div className="crm-cms-toolbar flex flex-col gap-4 rounded-3xl border border-black/[0.06] bg-white p-5 shadow-xs sm:p-6 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <div className="flex items-center gap-2">
                   <div className="flex size-7 items-center justify-center rounded-lg bg-black/[0.05] text-[#1D1D1F]">
@@ -4217,7 +4217,7 @@ function AdminBackoffice() {
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2.5">
+              <div className="crm-cms-actions flex flex-wrap items-center gap-2.5">
                 <div className="relative min-w-[200px] sm:min-w-[240px]">
                   <Search className="absolute left-3 top-2.5 size-3.5 text-[#86868B]" />
                   <input
@@ -4309,7 +4309,7 @@ function AdminBackoffice() {
             </div>
 
             {/* Category Navigation Pills */}
-            <div className="flex flex-wrap items-center gap-1.5 rounded-2xl bg-white p-2 border border-black/[0.06] shadow-2xs">
+            <div className="crm-cms-categories grid grid-cols-1 gap-2 rounded-2xl border border-black/[0.06] bg-white p-3 shadow-2xs sm:grid-cols-2 xl:grid-cols-4">
               {[
                 { id: "hero", label: "Hero & Brand", count: 12 },
                 { id: "yard", label: "Yard, Facility & Delivery", count: 8 },
@@ -4325,6 +4325,7 @@ function AdminBackoffice() {
                   <button
                     key={cat.id}
                     type="button"
+                    aria-pressed={isActive}
                     onClick={() => setCmsCategory(cat.id as typeof cmsCategory)}
                     className={`inline-flex items-center gap-2 rounded-xl px-3 py-1.5 text-xs font-medium transition-all ${
                       isActive
@@ -4346,10 +4347,10 @@ function AdminBackoffice() {
             </div>
 
             {/* Main Content: Full-Width Studio or Split Live Preview */}
-            <div className={cmsLayoutMode === "split" && isCmsPreviewOpen ? "grid grid-cols-1 lg:grid-cols-12 gap-6 items-start" : "w-full"}>
+            <div className={`crm-cms-editor-layout ${cmsLayoutMode === "split" && isCmsPreviewOpen ? "grid grid-cols-1 items-start gap-6 lg:grid-cols-12" : "w-full"}`}>
               {/* Field Editor Column */}
-              <div className={cmsLayoutMode === "split" && isCmsPreviewOpen ? "lg:col-span-7 xl:col-span-7 space-y-6" : "w-full space-y-6"}>
-                <form onSubmit={handleSaveSiteCopy} className="space-y-6">
+              <div className={`crm-cms-editor-column ${cmsLayoutMode === "split" && isCmsPreviewOpen ? "space-y-6 lg:col-span-7 xl:col-span-7" : "w-full space-y-6"}`}>
+                <form onSubmit={handleSaveSiteCopy} className="crm-cms-form space-y-6">
                   {/* Category 1: Hero & Brand */}
                   {(cmsCategory === "hero" || cmsCategory === "all" || cmsSearch) && (
                     <div className="rounded-3xl border border-black/[0.06] bg-white p-5 sm:p-7 shadow-xs space-y-5">
@@ -7301,9 +7302,9 @@ function AdminBackoffice() {
         {/* TAB 6: WORKSPACE PROFILE */}
         {/* ========================================================================= */}
         {activeTab === "profile" && (
-          <div className="mx-auto max-w-3xl space-y-6 pb-12">
+          <div className="crm-profile-page space-y-6 pb-12">
             {/* Page Header */}
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-black/[0.06] pb-6">
+            <div className="crm-page-heading crm-profile-page-header flex flex-col gap-2 border-b border-black/[0.06] pb-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-2xl font-bold tracking-tight text-[#1D1D1F]">
                   Workspace Profile
@@ -7314,14 +7315,14 @@ function AdminBackoffice() {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">
+                <span className="crm-profile-local-badge rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">
                   Browser-local workspace
                 </span>
               </div>
             </div>
 
-            <div>
-                <div className="rounded-3xl border border-black/[0.08] bg-white p-6 sm:p-7 shadow-xs">
+            <div className="crm-profile-panels grid grid-cols-1 gap-6 xl:grid-cols-2 xl:items-start">
+                <section className="crm-profile-card rounded-3xl border border-black/[0.08] bg-white p-6 shadow-xs sm:p-7">
                   <div className="flex items-center gap-4 border-b border-black/[0.06] pb-5">
                     <div className="flex size-14 items-center justify-center rounded-2xl bg-[#1D1D1F] text-white text-lg font-bold shadow-xs">
                       {adminProfile.fullName
@@ -7418,7 +7419,8 @@ function AdminBackoffice() {
                       </button>
                     </div>
                   </form>
-                  <div className="mt-5 border-t border-black/[0.08] pt-5">
+                </section>
+                <section className="crm-profile-security rounded-3xl border border-black/[0.08] bg-white p-6 shadow-xs sm:p-7">
                     <h3 className="text-sm font-semibold text-[#1D1D1F]">Administrator credentials</h3>
                     <p className="mt-1 text-xs text-[#86868B]">Change the email or password used to sign in to this CRM.</p>
                     <form
@@ -7452,8 +7454,7 @@ function AdminBackoffice() {
                         <button type="submit" className="h-9.5 rounded-xl bg-[#1D1D1F] px-5 text-xs font-semibold text-white">Update credentials</button>
                       </div>
                     </form>
-                  </div>
-                </div>
+                </section>
             </div>
           </div>
         )}
