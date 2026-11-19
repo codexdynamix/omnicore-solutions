@@ -345,6 +345,13 @@ function AdminBackoffice() {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [forgotMode, setForgotMode] = useState(false);
+  const [resetMode, setResetMode] = useState(false);
+  const [resetCode, setResetCode] = useState("");
+  const [newResetPassword, setNewResetPassword] = useState("");
+  const [accountCurrentPassword, setAccountCurrentPassword] = useState("");
+  const [accountEmail, setAccountEmail] = useState(adminProfile.email);
+  const [accountPassword, setAccountPassword] = useState("");
 
   async function hydrateFromDatabase() {
     try {
@@ -1447,31 +1454,68 @@ function AdminBackoffice() {
   }
 
   if (!authenticated) {
-    async function handleLogin(event: React.FormEvent) {
-      event.preventDefault();
-      setLoginError("");
-      try {
-        await crmApi.login(loginEmail, loginPassword);
-        setAuthenticated(true);
-        await hydrateFromDatabase();
-      } catch (error) {
-        setLoginError(error instanceof Error ? error.message : "Login failed");
-      }
-    }
-
     return (
       <main className="min-h-screen flex items-center justify-center bg-[#F5F5F7] px-4">
-        <form onSubmit={handleLogin} className="w-full max-w-sm rounded-2xl border border-black/[0.08] bg-white p-6 shadow-xl">
-          <h1 className="text-xl font-semibold text-[#1D1D1F]">Omnicore CRM Admin</h1>
-          <p className="mt-1 text-sm text-[#6E6E73]">Sign in to manage CRM records.</p>
+        <form
+          onSubmit={async (event) => {
+            event.preventDefault();
+            setLoginError("");
+            try {
+              if (forgotMode) {
+                await crmApi.forgotPassword(loginEmail);
+                setForgotMode(false);
+                setResetMode(true);
+                setLoginError("A reset code has been sent if this email is registered.");
+              } else if (resetMode) {
+                await crmApi.resetPassword(loginEmail, resetCode, newResetPassword);
+                setResetMode(false);
+                setLoginError("Password reset successfully. Sign in with the new password.");
+              } else {
+                await crmApi.login(loginEmail, loginPassword);
+                setAuthenticated(true);
+                await hydrateFromDatabase();
+              }
+            } catch (error) {
+              setLoginError(error instanceof Error ? error.message : "Login failed");
+            }
+          }}
+          className="w-full max-w-sm rounded-2xl border border-black/[0.08] bg-white p-6 shadow-xl"
+        >
+          <h1 className="text-xl font-semibold text-[#1D1D1F]">
+            {resetMode ? "Reset CRM password" : forgotMode ? "Forgot password" : "Omnicore CRM Admin"}
+          </h1>
+          <p className="mt-1 text-sm text-[#6E6E73]">
+            {resetMode ? "Enter the email code and choose a new password." : forgotMode ? "Enter your administrator email to receive a reset code." : "Sign in to manage CRM records."}
+          </p>
           {loginError ? <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{loginError}</p> : null}
           <label className="mt-5 block text-xs font-medium text-[#1D1D1F]">Email
             <input type="email" required value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} className="mt-2 h-11 w-full rounded-xl border border-black/[0.12] px-3 text-sm outline-none focus:border-[#0BAF87]" />
           </label>
-          <label className="mt-4 block text-xs font-medium text-[#1D1D1F]">Password
-            <input type="password" required value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} className="mt-2 h-11 w-full rounded-xl border border-black/[0.12] px-3 text-sm outline-none focus:border-[#0BAF87]" />
-          </label>
-          <button type="submit" className="mt-5 h-11 w-full rounded-xl bg-[#1D1D1F] text-sm font-semibold text-white">Sign in</button>
+          {!forgotMode && !resetMode ? (
+            <label className="mt-4 block text-xs font-medium text-[#1D1D1F]">Password
+              <input type="password" required value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} className="mt-2 h-11 w-full rounded-xl border border-black/[0.12] px-3 text-sm outline-none focus:border-[#0BAF87]" />
+            </label>
+          ) : null}
+          {resetMode ? (
+            <>
+              <label className="mt-4 block text-xs font-medium text-[#1D1D1F]">Reset code
+                <input type="text" inputMode="numeric" pattern="[0-9]{6}" required value={resetCode} onChange={(e) => setResetCode(e.target.value)} className="mt-2 h-11 w-full rounded-xl border border-black/[0.12] px-3 text-sm outline-none" />
+              </label>
+              <label className="mt-4 block text-xs font-medium text-[#1D1D1F]">New password
+                <input type="password" minLength={8} required value={newResetPassword} onChange={(e) => setNewResetPassword(e.target.value)} className="mt-2 h-11 w-full rounded-xl border border-black/[0.12] px-3 text-sm outline-none" />
+              </label>
+            </>
+          ) : null}
+          <button type="submit" className="mt-5 h-11 w-full rounded-xl bg-[#1D1D1F] text-sm font-semibold text-white">
+            {resetMode ? "Reset password" : forgotMode ? "Send reset code" : "Sign in"}
+          </button>
+          {!resetMode ? (
+            <button type="button" onClick={() => { setForgotMode(!forgotMode); setLoginError(""); }} className="mt-3 h-9 w-full text-xs font-semibold text-[#0B7A62]">
+              {forgotMode ? "Back to sign in" : "Forgot password?"}
+            </button>
+          ) : (
+            <button type="button" onClick={() => { setResetMode(false); setForgotMode(false); setLoginError(""); }} className="mt-3 h-9 w-full text-xs font-semibold text-[#0B7A62]">Back to sign in</button>
+          )}
         </form>
       </main>
     );
@@ -7342,6 +7386,41 @@ function AdminBackoffice() {
                       </button>
                     </div>
                   </form>
+                  <div className="mt-5 border-t border-black/[0.08] pt-5">
+                    <h3 className="text-sm font-semibold text-[#1D1D1F]">Administrator credentials</h3>
+                    <p className="mt-1 text-xs text-[#86868B]">Change the email or password used to sign in to this CRM.</p>
+                    <form
+                      onSubmit={async (event) => {
+                        event.preventDefault();
+                        try {
+                          await crmApi.changeCredentials(accountCurrentPassword, accountEmail, accountPassword);
+                          setAccountCurrentPassword("");
+                          setAccountPassword("");
+                          setProfileEmail(accountEmail);
+                          triggerToast("Administrator credentials updated.");
+                        } catch (error) {
+                          triggerToast(error instanceof Error ? error.message : "Could not update credentials.");
+                        }
+                      }}
+                      className="mt-4 grid grid-cols-1 gap-3 text-xs sm:grid-cols-2"
+                    >
+                      <label className="font-medium">
+                        Administrator email
+                        <input type="email" required value={accountEmail} onChange={(e) => setAccountEmail(e.target.value)} className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] px-3" />
+                      </label>
+                      <label className="font-medium">
+                        Current password
+                        <input type="password" required value={accountCurrentPassword} onChange={(e) => setAccountCurrentPassword(e.target.value)} className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] px-3" />
+                      </label>
+                      <label className="font-medium sm:col-span-2">
+                        New password <span className="font-normal text-[#86868B]">(leave blank to keep it unchanged)</span>
+                        <input type="password" minLength={8} value={accountPassword} onChange={(e) => setAccountPassword(e.target.value)} className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] px-3" />
+                      </label>
+                      <div className="sm:col-span-2 flex justify-end">
+                        <button type="submit" className="h-9.5 rounded-xl bg-[#1D1D1F] px-5 text-xs font-semibold text-white">Update credentials</button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
             </div>
           </div>
