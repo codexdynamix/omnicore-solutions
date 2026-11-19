@@ -108,3 +108,34 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+.crm-backoffice .text-xs {
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.crm-backoffice .text-sm {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.crm-backoffice [class~="text-[9px]"],
+.crm-backoffice [class~="text-[10px]"] {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.crm-backoffice [class~="text-[11px]"],
+.crm-backoffice [class~="text-[12px]"] {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.crm-backoffice main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), select) {
+  min-height: 2.75rem;
+  font-size: 0.9375rem;
+}
+
+.crm-backoffice main :is(th, td) {
+  padding-block: 0.875rem;
+}

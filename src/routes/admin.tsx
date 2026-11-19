@@ -73,9 +73,9 @@ import {
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Operations & CRM Backoffice Ã‚Â· Omnicore Harare" },
+      { title: "Operations & CRM Backoffice | Omnicore Harare" },
       { name: "description", content: "Client CRM, machinery inventory, and site content management." },
-      { property: "og:title", content: "Backoffice Ã‚Â· Omnicore Harare" },
+      { property: "og:title", content: "Backoffice | Omnicore Harare" },
     ],
   }),
   component: AdminBackoffice,
@@ -1542,7 +1542,7 @@ function AdminBackoffice() {
     );
   }
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] font-sans antialiased selection:bg-[#1D1D1F] selection:text-white">
+    <div className="crm-backoffice min-h-screen bg-[#F5F5F7] text-[#1D1D1F] font-sans antialiased selection:bg-[#1D1D1F] selection:text-white">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-5 inset-x-0 mx-auto z-50 flex w-fit items-center gap-2 rounded-full border border-black/[0.06] bg-white px-5 py-2.5 text-xs font-semibold text-[#1D1D1F] shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-md animate-in fade-in slide-in-from-top-3">
@@ -1692,9 +1692,6 @@ function AdminBackoffice() {
 
       {/* Main Workspace Body */}
       <main className="min-w-0 flex-1">
-        <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-900">
-          Database-backed CRM: changes are stored in the Hostinger MySQL database and require an authenticated administrator session.
-        </div>
         {/* ========================================================================= */}
         {/* TAB 1: CLIENT CRM & PIPELINE TABLE */}
         {/* ========================================================================= */}
@@ -2005,6 +2002,10 @@ function AdminBackoffice() {
               </form>
             ) : (
               <>
+            <div className="space-y-1">
+              <h1 className="text-2xl font-semibold tracking-tight text-[#1D1D1F]">Client pipeline</h1>
+              <p className="text-sm text-[#6E6E73]">Track client relationships, tender progress, and follow-up activity.</p>
+            </div>
             {/* KPI Executive Summary Strip */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               <div className="rounded-2xl border border-black/[0.04] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
@@ -4306,14 +4307,14 @@ function AdminBackoffice() {
             {/* Category Navigation Pills */}
             <div className="flex flex-wrap items-center gap-1.5 rounded-2xl bg-white p-2 border border-black/[0.06] shadow-2xs">
               {[
-                { id: "hero", label: "Ã°Å¸Å’Å¸ Hero & Brand", count: 12 },
-                { id: "yard", label: "Ã°Å¸â€œÂ Yard, Facility & Delivery", count: 8 },
-                { id: "contact", label: "Ã°Å¸â€œÅ¾ Contact Channels & Hotlines", count: 10 },
-                { id: "hours", label: "Ã¢ÂÂ° Hours, Warranties & Terms", count: 10 },
-                { id: "divisions", label: "Ã°Å¸Å¡Å“ Division Copy (5 Sectors)", count: 15 },
-                { id: "about", label: "Ã°Å¸ÂÂ¢ About & Corporate Pillars", count: 8 },
-                { id: "social", label: "Ã¢Å¡â€“Ã¯Â¸Â Social, Legal & Footer", count: 8 },
-                { id: "all", label: "Ã°Å¸â€œâ€¹ All Sections", count: 71 },
+                { id: "hero", label: "Hero & Brand", count: 12 },
+                { id: "yard", label: "Yard, Facility & Delivery", count: 8 },
+                { id: "contact", label: "Contact Channels & Hotlines", count: 10 },
+                { id: "hours", label: "Hours, Warranties & Terms", count: 10 },
+                { id: "divisions", label: "Division Copy (5 Sectors)", count: 15 },
+                { id: "about", label: "About & Corporate Pillars", count: 8 },
+                { id: "social", label: "Social, Legal & Footer", count: 8 },
+                { id: "all", label: "All Sections", count: 71 },
               ].map((cat) => {
                 const isActive = cmsCategory === cat.id;
                 return (
