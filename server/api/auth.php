@@ -4,8 +4,7 @@ require_once __DIR__ . '/common.php';
 $action = $_GET['action'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'login') {
-  ensure_admin();
-  $body = json_decode(file_get_contents('php://input'), true) ?: [];
+  try {\n  ensure_admin();\n   = json_decode(file_get_contents('php://input'), true) ?: [];
   $email = trim((string)($body['email'] ?? ''));
   $password = (string)($body['password'] ?? '');
   $stmt = db()->prepare('SELECT id,password_hash,email,full_name,role,phone,yard_location FROM admin_users WHERE email = ? LIMIT 1');
