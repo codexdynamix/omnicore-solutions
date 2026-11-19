@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Search,
@@ -353,31 +353,6 @@ function AdminBackoffice() {
   const [accountEmail, setAccountEmail] = useState(adminProfile.email);
   const [accountPassword, setAccountPassword] = useState("");
 
-  async function hydrateFromDatabase() {
-    try {
-      const data = await crmApi.list();
-      if (Array.isArray(data.crm)) setClients(data.crm);
-      if (Array.isArray(data.equipment)) setEquipmentList(data.equipment);
-      if (Array.isArray(data.deployments)) setDeploymentsList(data.deployments);
-      if (Array.isArray(data.recycle)) setRecycleBin(data.recycle);
-      if (data.siteCopy) setSiteCopy(data.siteCopy);
-      if (data.profile) {
-        setAdminProfile(data.profile);
-        setProfileName(data.profile.fullName || "");
-        setProfileEmail(data.profile.email || "");
-        setProfileRole(data.profile.role || "");
-        setProfilePhone(data.profile.phone || "");
-        setProfileLocation(data.profile.yardLocation || "");
-      }
-    } catch (error) {
-      triggerToast(error instanceof Error ? error.message : "Could not load database records");
-    }
-  }
-
-  useEffect(() => {
-    setAuthenticated(false);
-    setAuthChecking(false);
-  }, []);
   const [activeTab, setActiveTab] = useState<Tab>("crm");
   const [clients, setClients] = useState<CRMClient[]>(getStoredCRMClients);
   const [equipmentList, setEquipmentList] = useState<ExtendedEquipment[]>(getStoredEquipment);
@@ -821,6 +796,10 @@ function AdminBackoffice() {
 
   // Toast
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const triggerToast = useCallback((msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3200);
+  }, []);
 
   // Selection, recycle bin, confirmations
   const [recycleBin, setRecycleBin] = useState<RecycleBinItem[]>(getStoredRecycleBin);
@@ -867,12 +846,54 @@ function AdminBackoffice() {
       window.removeEventListener("omnicore-deployments-updated", handleStorageSync);
       window.removeEventListener("omnicore-storage-error", handleStorageError);
     };
-  }, []);
+  }, [triggerToast]);
 
-  function triggerToast(msg: string) {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3200);
-  }
+  const hydrateFromDatabase = useCallback(async () => {
+    try {
+      const data = await crmApi.list();
+      if (Array.isArray(data.crm)) setClients(data.crm);
+      if (Array.isArray(data.equipment)) setEquipmentList(data.equipment);
+      if (Array.isArray(data.deployments)) setDeploymentsList(data.deployments);
+      if (Array.isArray(data.recycle)) setRecycleBin(data.recycle);
+      if (data.siteCopy) setSiteCopy(data.siteCopy);
+      if (data.profile) {
+        setAdminProfile(data.profile);
+        setProfileName(data.profile.fullName || "");
+        setProfileEmail(data.profile.email || "");
+        setProfileRole(data.profile.role || "");
+        setProfilePhone(data.profile.phone || "");
+        setProfileLocation(data.profile.yardLocation || "");
+      }
+    } catch (error) {
+      triggerToast(error instanceof Error ? error.message : "Could not load database records");
+    }
+  }, [triggerToast]);
+
+  useEffect(() => {
+    let active = true;
+
+    async function restoreAdminSession() {
+      try {
+        const session = await crmApi.me();
+        if (!session.admin) throw new Error("Unauthorized");
+        if (!active) return;
+        setAuthenticated(true);
+        await hydrateFromDatabase();
+      } catch (error) {
+        if (!active) return;
+        if (!(error instanceof Error && error.message === "Unauthorized")) {
+          setLoginError(error instanceof Error ? error.message : "Could not verify administrator session.");
+        }
+      } finally {
+        if (active) setAuthChecking(false);
+      }
+    }
+
+    void restoreAdminSession();
+    return () => {
+      active = false;
+    };
+  }, [hydrateFromDatabase]);
 
   // CRM Handlers
   function updateClientStage(id: string, stage: CRMClient["stage"]) {
