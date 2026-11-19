@@ -1600,7 +1600,7 @@ function AdminBackoffice() {
             <button
               type="button"
               onClick={() => setActiveTab("profile")}
-              className={`hidden sm:flex items-center gap-2 rounded-full border border-black/[0.08] px-3 py-1 text-xs transition-all cursor-pointer ${
+              className={`hidden lg:flex items-center gap-2 rounded-full border border-black/[0.08] px-3 py-1 text-xs transition-all cursor-pointer ${
                 activeTab === "profile"
                   ? "bg-[#1D1D1F] text-white"
                   : "bg-[#F5F5F7] text-[#1D1D1F] hover:bg-[#EBEBEB]"
@@ -1640,7 +1640,7 @@ function AdminBackoffice() {
         <aside className="crm-sidebar lg:sticky lg:top-24 lg:w-60 lg:shrink-0">
           <nav
             aria-label="CRM sections"
-            className="crm-sidebar-nav flex gap-1.5 overflow-x-auto rounded-2xl border border-black/[0.06] bg-white p-2 shadow-xs lg:flex-col lg:overflow-visible"
+            className="crm-sidebar-nav grid grid-cols-1 gap-1.5 rounded-2xl border border-black/[0.06] bg-white p-2 shadow-xs sm:grid-cols-2 lg:flex lg:flex-col lg:overflow-visible"
           >
             {[
               { id: "crm", label: "Clients & CRM Pipeline", icon: Users, count: filteredClients.length },
@@ -1668,17 +1668,17 @@ function AdminBackoffice() {
                     setSelectedProductIds([]);
                     setSelectedBinIds([]);
                   }}
-                  className={`flex min-w-max items-center gap-3 rounded-xl px-3 py-3 text-left text-xs font-medium transition-all lg:w-full ${
+                  className={`flex min-w-0 w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-xs font-medium transition-all lg:px-2 ${
                     isActive
                       ? "bg-[#1D1D1F] text-white shadow-xs"
                       : "text-[#6E6E73] hover:bg-[#F5F5F7] hover:text-[#1D1D1F]"
                   }`}
                 >
                   <Icon className={`size-4 shrink-0 ${isActive ? "text-white" : "text-[#86868B]"}`} />
-                  <span className="flex-1">{tab.label}</span>
+                  <span className="min-w-0 flex-1 truncate">{tab.label}</span>
                   {tab.count !== undefined && (
                     <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] ${
+                      className={`min-w-6 shrink-0 rounded-full px-2 py-0.5 text-center text-[10px] ${
                         isActive
                           ? "bg-white/15 text-white"
                           : "bg-black/[0.04] text-[#86868B]"
