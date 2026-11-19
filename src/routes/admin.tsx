@@ -73,9 +73,9 @@ import {
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Operations & CRM Backoffice · Omnicore Harare" },
+      { title: "Operations & CRM Backoffice Â· Omnicore Harare" },
       { name: "description", content: "Client CRM, machinery inventory, and site content management." },
-      { property: "og:title", content: "Backoffice · Omnicore Harare" },
+      { property: "og:title", content: "Backoffice Â· Omnicore Harare" },
     ],
   }),
   component: AdminBackoffice,
@@ -114,29 +114,29 @@ export type YardPhotoPreset = {
 };
 
 const YARD_PHOTO_PRESETS: YardPhotoPreset[] = [
-  { label: "Jaw Crusher", src: "/images/jaw-crusher.jpg", category: "mining", spec: "5–15 TPH Primary Crush", badge: "Gold Ore Circuit" },
+  { label: "Jaw Crusher", src: "/images/jaw-crusher.jpg", category: "mining", spec: "5â€“15 TPH Primary Crush", badge: "Gold Ore Circuit" },
   { label: "Ball Mill", src: "/images/ball-mill.jpg", category: "mining", spec: "Continuous Wet Grinding", badge: "Milling Circuit" },
-  { label: "Mining Hammer Mill", src: "/images/hammer-mill.jpg", category: "mining", spec: "1.5–3.0 TPH High Speed", badge: "Fine Reduction" },
+  { label: "Mining Hammer Mill", src: "/images/hammer-mill.jpg", category: "mining", spec: "1.5â€“3.0 TPH High Speed", badge: "Fine Reduction" },
   { label: "Gold Separator", src: "/images/gold-separator.jpg", category: "mining", spec: "Centrifugal Concentrator", badge: "Free Gold" },
-  { label: "Trommel Wash Plant", src: "/images/trommel.jpg", category: "mining", spec: "15–30 TPH Scrub & Screen", badge: "Alluvial Gold" },
+  { label: "Trommel Wash Plant", src: "/images/trommel.jpg", category: "mining", spec: "15â€“30 TPH Scrub & Screen", badge: "Alluvial Gold" },
   { label: "Shaking Table", src: "/images/shaking-table.jpg", category: "mining", spec: "6-S Deck Gravity Separator", badge: "Concentrate Clean" },
   { label: "Slurry Pump", src: "/images/slurry-pump.jpg", category: "mining", spec: "High-Head Heavy Slurry", badge: "Tailings / Circuit" },
-  { label: "CAT 320D Excavator", src: "/images/excavator.jpg", category: "hire", spec: "20-Tonne Digger · 1.0m³ Bucket", badge: "Wet / Dry Fleet" },
-  { label: "37m Concrete Boom Pump", src: "/images/concrete-pump.jpg", category: "hire", spec: "37m Vertical · 125m³/h", badge: "Boom Pump Fleet" },
-  { label: "Self-Loading Mixer", src: "/images/self-loading-mixer.jpg", category: "hire", spec: "4.0m³ Batch · 4x4 Off-Road", badge: "Mobile Batching" },
+  { label: "CAT 320D Excavator", src: "/images/excavator.jpg", category: "hire", spec: "20-Tonne Digger Â· 1.0mÂ³ Bucket", badge: "Wet / Dry Fleet" },
+  { label: "37m Concrete Boom Pump", src: "/images/concrete-pump.jpg", category: "hire", spec: "37m Vertical Â· 125mÂ³/h", badge: "Boom Pump Fleet" },
+  { label: "Self-Loading Mixer", src: "/images/self-loading-mixer.jpg", category: "hire", spec: "4.0mÂ³ Batch Â· 4x4 Off-Road", badge: "Mobile Batching" },
   { label: "TLB Backhoe", src: "/images/tlb.jpg", category: "hire", spec: "4x4 Turbo Heavy Backhoe", badge: "Trench & Civils" },
-  { label: "Motor Grader", src: "/images/grader.jpg", category: "hire", spec: "140hp · 12ft Heavy Blade", badge: "Haul Roads" },
-  { label: "Farm Hammer Mill", src: "/images/farm-hammer-mill.jpg", category: "farming", spec: "Maize & Grain 1–2 TPH", badge: "Stockfeed Milling" },
-  { label: "Feed Mixer (Vertical)", src: "/images/feed-mixer.jpg", category: "farming", spec: "500kg – 1-Tonne Batch", badge: "Poultry & Dairy" },
+  { label: "Motor Grader", src: "/images/grader.jpg", category: "hire", spec: "140hp Â· 12ft Heavy Blade", badge: "Haul Roads" },
+  { label: "Farm Hammer Mill", src: "/images/farm-hammer-mill.jpg", category: "farming", spec: "Maize & Grain 1â€“2 TPH", badge: "Stockfeed Milling" },
+  { label: "Feed Mixer (Vertical)", src: "/images/feed-mixer.jpg", category: "farming", spec: "500kg â€“ 1-Tonne Batch", badge: "Poultry & Dairy" },
   { label: "Feed Mixer 3-Tonne", src: "/images/feed-mixer-3t.jpg", category: "farming", spec: "3-Tonne Commercial Batch", badge: "Commercial Feedlot" },
-  { label: "Ice Block Plant", src: "/images/ice-block.jpg", category: "farming", spec: "1–5 Tonne / 24h Blocks", badge: "Cold Chain Storage" },
+  { label: "Ice Block Plant", src: "/images/ice-block.jpg", category: "farming", spec: "1â€“5 Tonne / 24h Blocks", badge: "Cold Chain Storage" },
   { label: "Electric Fence Machine", src: "/images/electric-fence.jpg", category: "hardware", spec: "Automated Diamond Mesh", badge: "Wire Weaving" },
   { label: "Barbed Wire Machine", src: "/images/barbed-wire.jpg", category: "hardware", spec: "High-Speed Dual Strand", badge: "Perimeter Security" },
   { label: "Diesel Fence Machine", src: "/images/diesel-fence.jpg", category: "hardware", spec: "Independent Generator Drive", badge: "Off-Grid Production" },
   { label: "Double-Twist Fence", src: "/images/double-fence.jpg", category: "hardware", spec: "Heavy Hexagonal Mesh", badge: "Mining & Game Fence" },
   { label: "3-Phase Electric Motor", src: "/images/electric-motor.jpg", category: "industry", spec: "7.5kW to 55kW 380V", badge: "Heavy Duty Drive" },
   { label: "Diesel Generator Kit", src: "/images/generator.jpg", category: "industry", spec: "15kVA to 150kVA Silent", badge: "Standby Power" },
-  { label: "Industrial Air Compressor", src: "/images/compressor.jpg", category: "industry", spec: "8–12 Bar Heavy Duty", badge: "Pneumatic Power" },
+  { label: "Industrial Air Compressor", src: "/images/compressor.jpg", category: "industry", spec: "8â€“12 Bar Heavy Duty", badge: "Pneumatic Power" },
 ];
 
 function RecordPager({
@@ -187,7 +187,7 @@ function RecordPager({
           Previous
         </button>
         <span className="min-w-16 px-2 text-center text-xs font-medium text-[#6E6E73]">
-          {index < 0 ? "—" : `${index + 1} of ${total}`}
+          {index < 0 ? "â€”" : `${index + 1} of ${total}`}
         </span>
         <button
           type="button"
@@ -1444,6 +1444,40 @@ function AdminBackoffice() {
     return () => window.removeEventListener("keydown", onKey);
   });
 
+  if (authChecking) {
+    return <div className="min-h-screen flex items-center justify-center bg-[#F5F5F7] text-sm text-[#6E6E73]">Checking CRM administrator session...</div>;
+  }
+
+  if (!authenticated) {
+    async function handleLogin(event: React.FormEvent) {
+      event.preventDefault();
+      setLoginError("");
+      try {
+        await crmApi.login(loginEmail, loginPassword);
+        setAuthenticated(true);
+        await hydrateFromDatabase();
+      } catch (error) {
+        setLoginError(error instanceof Error ? error.message : "Login failed");
+      }
+    }
+
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-[#F5F5F7] px-4">
+        <form onSubmit={handleLogin} className="w-full max-w-sm rounded-2xl border border-black/[0.08] bg-white p-6 shadow-xl">
+          <h1 className="text-xl font-semibold text-[#1D1D1F]">Omnicore CRM Admin</h1>
+          <p className="mt-1 text-sm text-[#6E6E73]">Sign in to manage CRM records.</p>
+          {loginError ? <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{loginError}</p> : null}
+          <label className="mt-5 block text-xs font-medium text-[#1D1D1F]">Email
+            <input type="email" required value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} className="mt-2 h-11 w-full rounded-xl border border-black/[0.12] px-3 text-sm outline-none focus:border-[#0BAF87]" />
+          </label>
+          <label className="mt-4 block text-xs font-medium text-[#1D1D1F]">Password
+            <input type="password" required value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} className="mt-2 h-11 w-full rounded-xl border border-black/[0.12] px-3 text-sm outline-none focus:border-[#0BAF87]" />
+          </label>
+          <button type="submit" className="mt-5 h-11 w-full rounded-xl bg-[#1D1D1F] text-sm font-semibold text-white">Sign in</button>
+        </form>
+      </main>
+    );
+  }
   return (
     <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] font-sans antialiased selection:bg-[#1D1D1F] selection:text-white">
       {/* Toast Notification */}
@@ -1521,7 +1555,7 @@ function AdminBackoffice() {
             </button>
 
             <span className="rounded-full border border-amber-200 bg-amber-50 px-3.5 py-1.5 text-xs font-semibold text-amber-800">
-              Development · browser-only
+              Development Â· browser-only
             </span>
 
             <Link
@@ -1603,7 +1637,7 @@ function AdminBackoffice() {
                   index={clientNavIndex}
                   total={filteredClients.length}
                   title={clientDraft.name}
-                  subtitle={`${clientDraft.organization} · ${clientDraft.id}`}
+                  subtitle={`${clientDraft.organization} Â· ${clientDraft.id}`}
                   onBack={closeClientProfile}
                   backLabel="All clients"
                   onPrev={() => stepClient(-1)}
@@ -2884,12 +2918,12 @@ function AdminBackoffice() {
                                   <p className="text-sm font-semibold truncate leading-tight">{editingProduct.name}</p>
                                   <div className="flex items-center gap-2 mt-1 text-xs text-white/80">
                                     <span className="capitalize font-medium">{editingProduct.category} Division</span>
-                                    <span>•</span>
+                                    <span>â€¢</span>
                                     <span className="font-mono text-[11px]">{editingProduct.sku || editingProduct.id}</span>
                                   </div>
                                 </div>
                                 <span className="shrink-0 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-1 text-[10px] font-semibold text-white group-hover:bg-[#1FA855] transition-all">
-                                  View Large Screen ↗
+                                  View Large Screen â†—
                                 </span>
                               </div>
                             </div>
@@ -3110,7 +3144,7 @@ function AdminBackoffice() {
                             type="text"
                             value={editingProduct.throughput || ""}
                             onChange={(e) => setEditingProduct({ ...editingProduct, throughput: e.target.value })}
-                            placeholder="e.g. 5–8 Tonnes / Hour or 37m Boom Reach"
+                            placeholder="e.g. 5â€“8 Tonnes / Hour or 37m Boom Reach"
                             className="h-9 w-full rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-[#1D1D1F] focus:bg-white focus:outline-none"
                           />
                         </div>
@@ -3136,7 +3170,7 @@ function AdminBackoffice() {
                             type="text"
                             value={editingProduct.spec || ""}
                             onChange={(e) => setEditingProduct({ ...editingProduct, spec: e.target.value })}
-                            placeholder="e.g. Primary crush · gold & chrome circuits"
+                            placeholder="e.g. Primary crush Â· gold & chrome circuits"
                             className="h-9 w-full rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-[#1D1D1F] focus:bg-white focus:outline-none"
                           />
                         </div>
@@ -3286,16 +3320,16 @@ function AdminBackoffice() {
                           <p className="text-[#6E6E73] text-[10px]">SKU: {editingProduct.sku || editingProduct.id}</p>
                         </div>
                         <div className="border-t border-black/[0.06] pt-1.5 space-y-1 text-[11px]">
-                          <div>• <span className="text-[#86868B]">Throughput:</span> {editingProduct.throughput || editingProduct.spec || "Site Rated"}</div>
-                          <div>• <span className="text-[#86868B]">Drive:</span> {editingProduct.powerOption || "Electric / Diesel"}</div>
-                          <div>• <span className="text-[#86868B]">Yard:</span> {editingProduct.stockStatus || "In Yard Cranborne"}</div>
-                          <div>• <span className="text-[#86868B]">Rate:</span> {editingProduct.priceUSD || editingProduct.price || "Tender on Request"}</div>
+                          <div>â€¢ <span className="text-[#86868B]">Throughput:</span> {editingProduct.throughput || editingProduct.spec || "Site Rated"}</div>
+                          <div>â€¢ <span className="text-[#86868B]">Drive:</span> {editingProduct.powerOption || "Electric / Diesel"}</div>
+                          <div>â€¢ <span className="text-[#86868B]">Yard:</span> {editingProduct.stockStatus || "In Yard Cranborne"}</div>
+                          <div>â€¢ <span className="text-[#86868B]">Rate:</span> {editingProduct.priceUSD || editingProduct.price || "Tender on Request"}</div>
                         </div>
                       </div>
 
                       <a
                         href={whatsappUrl(
-                          `Hello from Omnicore Solutions Harare. Regarding ${editingProduct.name} (${editingProduct.sku || editingProduct.id}):\n• Capacity: ${editingProduct.throughput || editingProduct.spec || "Site Rated"}\n• Power: ${editingProduct.powerOption || "Electric 3-Phase / Diesel"}\n• Availability: ${editingProduct.stockStatus || "In Yard Cranborne"}\n• Rate: ${editingProduct.priceUSD || editingProduct.price || "Tender on Request"}\n\nInspections welcome at 115 Chiremba Rd, Cranborne, Harare.`
+                          `Hello from Omnicore Solutions Harare. Regarding ${editingProduct.name} (${editingProduct.sku || editingProduct.id}):\nâ€¢ Capacity: ${editingProduct.throughput || editingProduct.spec || "Site Rated"}\nâ€¢ Power: ${editingProduct.powerOption || "Electric 3-Phase / Diesel"}\nâ€¢ Availability: ${editingProduct.stockStatus || "In Yard Cranborne"}\nâ€¢ Rate: ${editingProduct.priceUSD || editingProduct.price || "Tender on Request"}\n\nInspections welcome at 115 Chiremba Rd, Cranborne, Harare.`
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -3738,7 +3772,7 @@ function AdminBackoffice() {
                     <div className="col-span-2 rounded-xl bg-[#F5F5F7] p-2.5">
                       <span className="block text-[10px] uppercase text-[#86868B]">Throughput / drive</span>
                       <span className="font-medium text-[#1D1D1F]">
-                        {peekProduct.throughput || peekProduct.spec} · {peekProduct.powerOption || "Electric / Diesel"}
+                        {peekProduct.throughput || peekProduct.spec} Â· {peekProduct.powerOption || "Electric / Diesel"}
                       </span>
                     </div>
                     <div className="col-span-2 rounded-xl bg-[#F5F5F7] p-2.5">
@@ -4029,7 +4063,7 @@ function AdminBackoffice() {
                           type="text"
                           value={newProdThroughput}
                           onChange={(e) => setNewProdThroughput(e.target.value)}
-                          placeholder="e.g. 5–15 TPH or 35m boom"
+                          placeholder="e.g. 5â€“15 TPH or 35m boom"
                           className="w-full h-8 rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 focus:bg-white focus:outline-none"
                         />
                       </div>
@@ -4203,14 +4237,14 @@ function AdminBackoffice() {
             {/* Category Navigation Pills */}
             <div className="flex flex-wrap items-center gap-1.5 rounded-2xl bg-white p-2 border border-black/[0.06] shadow-2xs">
               {[
-                { id: "hero", label: "🌟 Hero & Brand", count: 12 },
-                { id: "yard", label: "📍 Yard, Facility & Delivery", count: 8 },
-                { id: "contact", label: "📞 Contact Channels & Hotlines", count: 10 },
-                { id: "hours", label: "⏰ Hours, Warranties & Terms", count: 10 },
-                { id: "divisions", label: "🚜 Division Copy (5 Sectors)", count: 15 },
-                { id: "about", label: "🏢 About & Corporate Pillars", count: 8 },
-                { id: "social", label: "⚖️ Social, Legal & Footer", count: 8 },
-                { id: "all", label: "📋 All Sections", count: 71 },
+                { id: "hero", label: "ðŸŒŸ Hero & Brand", count: 12 },
+                { id: "yard", label: "ðŸ“ Yard, Facility & Delivery", count: 8 },
+                { id: "contact", label: "ðŸ“ž Contact Channels & Hotlines", count: 10 },
+                { id: "hours", label: "â° Hours, Warranties & Terms", count: 10 },
+                { id: "divisions", label: "ðŸšœ Division Copy (5 Sectors)", count: 15 },
+                { id: "about", label: "ðŸ¢ About & Corporate Pillars", count: 8 },
+                { id: "social", label: "âš–ï¸ Social, Legal & Footer", count: 8 },
+                { id: "all", label: "ðŸ“‹ All Sections", count: 71 },
               ].map((cat) => {
                 const isActive = cmsCategory === cat.id;
                 return (
@@ -4327,7 +4361,7 @@ function AdminBackoffice() {
                             value={cmsForm.heroBannerAnnouncement || ""}
                             onChange={(e) => updateCmsField("heroBannerAnnouncement", e.target.value)}
                             className="w-full h-9 rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-xs focus:bg-white focus:outline-none"
-                            placeholder="Cranborne Yard Open Mon–Sat · Lowbed Deliveries Nationwide"
+                            placeholder="Cranborne Yard Open Monâ€“Sat Â· Lowbed Deliveries Nationwide"
                           />
                         </div>
                         <div>
@@ -4339,7 +4373,7 @@ function AdminBackoffice() {
                             value={cmsForm.heroBadge}
                             onChange={(e) => updateCmsField("heroBadge", e.target.value)}
                             className="w-full h-9 rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-xs focus:bg-white focus:outline-none"
-                            placeholder="Cranborne yard · 115 Chiremba Road, Harare"
+                            placeholder="Cranborne yard Â· 115 Chiremba Road, Harare"
                           />
                         </div>
                       </div>
@@ -4355,7 +4389,7 @@ function AdminBackoffice() {
                             value={cmsForm.heroHeadline}
                             onChange={(e) => updateCmsField("heroHeadline", e.target.value)}
                             className="w-full h-11 rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3.5 text-sm font-semibold text-[#1D1D1F] focus:bg-white focus:outline-none"
-                            placeholder="Plant for Zimbabwe’s mines, farms and pours."
+                            placeholder="Plant for Zimbabweâ€™s mines, farms and pours."
                           />
                         </div>
 
@@ -4449,7 +4483,7 @@ function AdminBackoffice() {
                             <div className="space-y-1.5">
                               <input
                                 type="text"
-                                placeholder="Label (e.g. 1–25 TPH)"
+                                placeholder="Label (e.g. 1â€“25 TPH)"
                                 value={cmsForm.stat2Label}
                                 onChange={(e) => updateCmsField("stat2Label", e.target.value)}
                                 className="w-full h-8 rounded-lg border border-black/[0.08] bg-white px-2.5 text-xs font-semibold"
@@ -4619,7 +4653,7 @@ function AdminBackoffice() {
                           value={cmsForm.inspectionNotice}
                           onChange={(e) => updateCmsField("inspectionNotice", e.target.value)}
                           className="w-full h-8.5 rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-xs focus:bg-white focus:outline-none"
-                          placeholder="Physical yard mechanical inspections welcome Monday–Saturday at 115 Chiremba Rd, Cranborne."
+                          placeholder="Physical yard mechanical inspections welcome Mondayâ€“Saturday at 115 Chiremba Rd, Cranborne."
                         />
                       </div>
                     </div>
@@ -4777,7 +4811,7 @@ function AdminBackoffice() {
                           value={cmsForm.whatsappMessage}
                           onChange={(e) => updateCmsField("whatsappMessage", e.target.value)}
                           className="w-full h-8.5 rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-xs focus:bg-white focus:outline-none"
-                          placeholder="Hello Omnicore Harare Desk — I would like an equipment quote."
+                          placeholder="Hello Omnicore Harare Desk â€” I would like an equipment quote."
                         />
                       </div>
                     </div>
@@ -4808,14 +4842,14 @@ function AdminBackoffice() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                         <div>
                           <label className="font-semibold text-[#1D1D1F] text-xs block mb-1">
-                            Monday – Friday Hours
+                            Monday â€“ Friday Hours
                           </label>
                           <input
                             type="text"
                             value={cmsForm.hoursWeekday}
                             onChange={(e) => updateCmsField("hoursWeekday", e.target.value)}
                             className="w-full h-8.5 rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-xs focus:bg-white focus:outline-none"
-                            placeholder="08:00 – 17:00"
+                            placeholder="08:00 â€“ 17:00"
                           />
                         </div>
                         <div>
@@ -4827,7 +4861,7 @@ function AdminBackoffice() {
                             value={cmsForm.hoursSaturday}
                             onChange={(e) => updateCmsField("hoursSaturday", e.target.value)}
                             className="w-full h-8.5 rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-xs focus:bg-white focus:outline-none"
-                            placeholder="08:00 – 13:00"
+                            placeholder="08:00 â€“ 13:00"
                           />
                         </div>
                       </div>
@@ -4842,7 +4876,7 @@ function AdminBackoffice() {
                             value={cmsForm.hoursSunday}
                             onChange={(e) => updateCmsField("hoursSunday", e.target.value)}
                             className="w-full h-8.5 rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-xs focus:bg-white focus:outline-none"
-                            placeholder="Closed · WhatsApp desk monitored"
+                            placeholder="Closed Â· WhatsApp desk monitored"
                           />
                         </div>
                         <div>
@@ -4868,7 +4902,7 @@ function AdminBackoffice() {
                           value={cmsForm.dispatchTurnaround}
                           onChange={(e) => updateCmsField("dispatchTurnaround", e.target.value)}
                           className="w-full h-8.5 rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-xs focus:bg-white focus:outline-none"
-                          placeholder="Same-day lowbed loading for in-stock plant; 24–48h nationwide delivery."
+                          placeholder="Same-day lowbed loading for in-stock plant; 24â€“48h nationwide delivery."
                         />
                       </div>
 
@@ -4934,7 +4968,7 @@ function AdminBackoffice() {
                           value={cmsForm.tendersNotice || ""}
                           onChange={(e) => updateCmsField("tendersNotice", e.target.value)}
                           className="w-full h-9 rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-xs focus:bg-white focus:outline-none"
-                          placeholder="PRAZ Registered Supplier · Formal tenders, municipal quotes & mine procurement packs issued within 24h."
+                          placeholder="PRAZ Registered Supplier Â· Formal tenders, municipal quotes & mine procurement packs issued within 24h."
                         />
                       </div>
                     </div>
@@ -5236,7 +5270,7 @@ function AdminBackoffice() {
                         </span>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                           <div className="rounded-xl border border-black/[0.05] bg-[#F9F9FA] p-3 space-y-1">
-                            <label className="text-[10px] font-bold text-[#86868B] block uppercase tracking-wider">Pillar 1 · Yard Stock</label>
+                            <label className="text-[10px] font-bold text-[#86868B] block uppercase tracking-wider">Pillar 1 Â· Yard Stock</label>
                             <input
                               type="text"
                               value={cmsForm.aboutPillar1}
@@ -5245,7 +5279,7 @@ function AdminBackoffice() {
                             />
                           </div>
                           <div className="rounded-xl border border-black/[0.05] bg-[#F9F9FA] p-3 space-y-1">
-                            <label className="text-[10px] font-bold text-[#86868B] block uppercase tracking-wider">Pillar 2 · Field Proven</label>
+                            <label className="text-[10px] font-bold text-[#86868B] block uppercase tracking-wider">Pillar 2 Â· Field Proven</label>
                             <input
                               type="text"
                               value={cmsForm.aboutPillar2}
@@ -5254,7 +5288,7 @@ function AdminBackoffice() {
                             />
                           </div>
                           <div className="rounded-xl border border-black/[0.05] bg-[#F9F9FA] p-3 space-y-1">
-                            <label className="text-[10px] font-bold text-[#86868B] block uppercase tracking-wider">Pillar 3 · Spares Back-up</label>
+                            <label className="text-[10px] font-bold text-[#86868B] block uppercase tracking-wider">Pillar 3 Â· Spares Back-up</label>
                             <input
                               type="text"
                               value={cmsForm.aboutPillar3}
@@ -5263,7 +5297,7 @@ function AdminBackoffice() {
                             />
                           </div>
                           <div className="rounded-xl border border-black/[0.05] bg-[#F9F9FA] p-3 space-y-1">
-                            <label className="text-[10px] font-bold text-[#86868B] block uppercase tracking-wider">Pillar 4 · Logistics</label>
+                            <label className="text-[10px] font-bold text-[#86868B] block uppercase tracking-wider">Pillar 4 Â· Logistics</label>
                             <input
                               type="text"
                               value={cmsForm.aboutPillar4}
@@ -5374,7 +5408,7 @@ function AdminBackoffice() {
                           value={cmsForm.footerCopyright}
                           onChange={(e) => updateCmsField("footerCopyright", e.target.value)}
                           className="w-full h-8.5 rounded-xl border border-black/[0.08] bg-[#F5F5F7] px-3 text-xs focus:bg-white focus:outline-none"
-                          placeholder="© 2026 Omnicore Solutions. All rights reserved..."
+                          placeholder="Â© 2026 Omnicore Solutions. All rights reserved..."
                         />
                       </div>
                     </div>
@@ -5478,7 +5512,7 @@ function AdminBackoffice() {
                       </div>
 
                       <h4 className="text-base sm:text-lg font-semibold tracking-tight text-white leading-tight">
-                        {cmsForm.heroHeadline || "Plant for Zimbabwe’s mines, farms and pours."}
+                        {cmsForm.heroHeadline || "Plant for Zimbabweâ€™s mines, farms and pours."}
                       </h4>
 
                       <p className="text-[11px] leading-relaxed text-white/75 line-clamp-3">
@@ -5505,7 +5539,7 @@ function AdminBackoffice() {
                           <p className="text-white/60 truncate">{cmsForm.stat1Detail || "Cranborne yard"}</p>
                         </div>
                         <div className="bg-white/5 rounded-lg p-1.5">
-                          <p className="font-semibold text-white truncate">{cmsForm.stat2Label || "1–25 TPH"}</p>
+                          <p className="font-semibold text-white truncate">{cmsForm.stat2Label || "1â€“25 TPH"}</p>
                           <p className="text-white/60 truncate">{cmsForm.stat2Detail || "Gold circuits"}</p>
                         </div>
                         <div className="bg-white/5 rounded-lg p-1.5">
@@ -5544,12 +5578,12 @@ function AdminBackoffice() {
 
                       <div className="space-y-1 text-[11px]">
                         <div className="flex items-center justify-between">
-                          <span className="text-[#86868B]">Mon – Fri:</span>
-                          <span className="font-medium text-[#1D1D1F]">{cmsForm.hoursWeekday || "08:00 – 17:00"}</span>
+                          <span className="text-[#86868B]">Mon â€“ Fri:</span>
+                          <span className="font-medium text-[#1D1D1F]">{cmsForm.hoursWeekday || "08:00 â€“ 17:00"}</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-[#86868B]">Saturday:</span>
-                          <span className="font-medium text-[#1D1D1F]">{cmsForm.hoursSaturday || "08:00 – 13:00"}</span>
+                          <span className="font-medium text-[#1D1D1F]">{cmsForm.hoursSaturday || "08:00 â€“ 13:00"}</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-[#86868B]">Sunday:</span>
@@ -5564,7 +5598,7 @@ function AdminBackoffice() {
                           rel="noopener noreferrer"
                           className="flex-1 rounded-xl bg-white border border-black/[0.08] py-1.5 text-center text-[10px] font-semibold text-[#1D1D1F] hover:bg-black/[0.02]"
                         >
-                          Google Maps Pin ↗
+                          Google Maps Pin â†—
                         </a>
                         <a
                           href={`tel:${cmsForm.primaryPhoneTel}`}
@@ -5585,7 +5619,7 @@ function AdminBackoffice() {
                           <span className="text-xs font-bold text-[#1B5E20]">Harare WhatsApp Desk</span>
                         </div>
                         <span className="text-[10px] font-medium text-[#2E7D32]">
-                          Active · +{cmsForm.whatsappNumber}
+                          Active Â· +{cmsForm.whatsappNumber}
                         </span>
                       </div>
 
@@ -5594,7 +5628,7 @@ function AdminBackoffice() {
                           Pre-Filled User Message:
                         </span>
                         <div className="rounded-lg bg-[#F1F8E9] p-2 text-xs text-[#1B5E20] italic border-l-2 border-[#1FA855]">
-                          "{cmsForm.whatsappMessage || "Hello Omnicore Harare Desk — I would like an equipment quote."}"
+                          "{cmsForm.whatsappMessage || "Hello Omnicore Harare Desk â€” I would like an equipment quote."}"
                         </div>
                         <p className="text-[10px] text-[#6E6E73]">
                           SLA: {cmsForm.responseSLA || "Average response < 15 mins"}
@@ -5616,7 +5650,7 @@ function AdminBackoffice() {
                         rel="noopener noreferrer"
                         className="block w-full text-center rounded-xl bg-[#1FA855] py-2 text-xs font-semibold text-white shadow-xs hover:bg-[#1B934B] transition-all"
                       >
-                        Test WhatsApp Link ↗
+                        Test WhatsApp Link â†—
                       </a>
                     </div>
                   )}
@@ -5737,13 +5771,13 @@ function AdminBackoffice() {
 
                       <div className="pt-2 border-t border-black/[0.06] space-y-1">
                         <p className="text-[10px] text-[#86868B] font-mono">
-                          {cmsForm.footerCopyright || `© 2026 Omnicore Solutions.`}
+                          {cmsForm.footerCopyright || `Â© 2026 Omnicore Solutions.`}
                         </p>
                         <div className="flex gap-2 text-[10px] text-[#0071E3]">
                           <span>LinkedIn</span>
-                          <span>·</span>
+                          <span>Â·</span>
                           <span>Facebook</span>
-                          <span>·</span>
+                          <span>Â·</span>
                           <span>{cmsForm.email}</span>
                         </div>
                       </div>
@@ -6130,7 +6164,7 @@ function AdminBackoffice() {
                                     openProductLightbox({
                                       name: dep.plant,
                                       category: dep.category,
-                                      spec: `${dep.client} · ${dep.site}`,
+                                      spec: `${dep.client} Â· ${dep.site}`,
                                       price: dep.rate,
                                       sku: dep.sku || dep.id,
                                       image: dep.image,
@@ -6159,11 +6193,11 @@ function AdminBackoffice() {
                                   </div>
                                   <div className="flex items-center gap-1.5 text-[10px] text-[#86868B] mt-0.5">
                                     <span className="font-mono">{dep.id}</span>
-                                    <span>·</span>
+                                    <span>Â·</span>
                                     <span className="capitalize">{dep.category}</span>
                                     {dep.sku && (
                                       <>
-                                        <span>·</span>
+                                        <span>Â·</span>
                                         <span className="truncate">{dep.sku}</span>
                                       </>
                                     )}
@@ -6276,7 +6310,7 @@ function AdminBackoffice() {
                                     openProductLightbox({
                                       name: dep.plant,
                                       category: dep.category,
-                                      spec: `${dep.client} · ${dep.site}`,
+                                      spec: `${dep.client} Â· ${dep.site}`,
                                       price: dep.rate,
                                       sku: dep.sku || dep.id,
                                       image: dep.image,
@@ -6356,7 +6390,7 @@ function AdminBackoffice() {
                             openProductLightbox({
                               name: dep.plant,
                               category: dep.category,
-                              spec: `${dep.client} · ${dep.site}`,
+                              spec: `${dep.client} Â· ${dep.site}`,
                               price: dep.rate,
                               sku: dep.sku || dep.id,
                               image: dep.image,
@@ -6423,7 +6457,7 @@ function AdminBackoffice() {
                             Contract & Operator
                           </span>
                           <span className="text-[#1D1D1F] truncate block font-medium">
-                            {dep.contractRef} · {dep.operator}
+                            {dep.contractRef} Â· {dep.operator}
                           </span>
                         </div>
                       </div>
@@ -6431,7 +6465,7 @@ function AdminBackoffice() {
                       {/* Card Footer Actions */}
                       <div className="mt-3 pt-2.5 border-t border-black/[0.06] flex items-center justify-between gap-2">
                         <span className="text-[10px] font-medium text-[#86868B]">
-                          📍 {dep.province}
+                          ðŸ“ {dep.province}
                         </span>
 
                         <div className="flex items-center gap-1.5">
@@ -6530,7 +6564,7 @@ function AdminBackoffice() {
                                 </div>
                               </div>
 
-                              <p className="text-[10px] text-[#86868B] truncate">📍 {dep.site}</p>
+                              <p className="text-[10px] text-[#86868B] truncate">ðŸ“ {dep.site}</p>
 
                               <div className="pt-2 border-t border-black/[0.04] flex items-center justify-between text-[10px]">
                                 <span className="text-[#86868B]">Due: {dep.scheduledReturn || "Open"}</span>
