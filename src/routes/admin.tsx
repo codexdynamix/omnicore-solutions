@@ -368,10 +368,8 @@ function AdminBackoffice() {
   }
 
   useEffect(() => {
-    crmApi.me().then(async () => {
-      setAuthenticated(true);
-      await hydrateFromDatabase();
-    }).catch(() => setAuthenticated(false)).finally(() => setAuthChecking(false));
+    setAuthenticated(false);
+    setAuthChecking(false);
   }, []);
   const [activeTab, setActiveTab] = useState<Tab>("crm");
   const [clients, setClients] = useState<CRMClient[]>(getStoredCRMClients);
