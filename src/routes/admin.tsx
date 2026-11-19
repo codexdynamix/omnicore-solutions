@@ -36,6 +36,7 @@ import {
   Table,
   LayoutGrid,
   Kanban,
+  LogOut,
   ShieldCheck,
 } from "lucide-react";
 import {
@@ -300,6 +301,7 @@ function AdminBackoffice() {
   const [accountCurrentPassword, setAccountCurrentPassword] = useState("");
   const [accountEmail, setAccountEmail] = useState(adminProfile.email);
   const [accountPassword, setAccountPassword] = useState("");
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const credentialsChanged = accountEmail.trim() !== adminProfile.email || accountPassword.length > 0;
 
   async function handleSaveAccount(e: React.FormEvent) {
@@ -358,6 +360,21 @@ function AdminBackoffice() {
     setAccountCurrentPassword("");
     setAccountPassword("");
     triggerToast(credentialsChanged ? "Account and sign-in settings updated." : "Account details updated.");
+  }
+
+  async function handleLogout() {
+    setIsLoggingOut(true);
+    try {
+      const result = await crmApi.logout();
+      if (!result.ok) throw new Error(result.error || "Could not log out.");
+      setLoginEmail("");
+      setLoginPassword("");
+      setAuthenticated(false);
+    } catch (error) {
+      triggerToast(error instanceof Error ? error.message : "Could not log out.");
+    } finally {
+      setIsLoggingOut(false);
+    }
   }
 
   const [activeTab, setActiveTab] = useState<Tab>("crm");
@@ -1634,7 +1651,7 @@ function AdminBackoffice() {
       </header>
 
       <div className="crm-workspace-shell mx-auto flex w-full max-w-[1720px] flex-col gap-5 px-4 py-6 sm:px-6 lg:flex-row lg:items-start lg:gap-6 lg:px-8">
-        <aside className="crm-sidebar lg:sticky lg:top-24 lg:w-60 lg:shrink-0">
+        <aside className="crm-sidebar flex flex-col gap-3 lg:sticky lg:top-24 lg:h-[calc(100vh-7.5rem)] lg:w-60 lg:shrink-0">
           <nav
             aria-label="CRM sections"
             className="crm-sidebar-nav grid grid-cols-1 gap-1.5 rounded-2xl border border-black/[0.06] bg-white p-2 shadow-xs sm:grid-cols-2 lg:flex lg:flex-col lg:overflow-visible"
@@ -1688,6 +1705,15 @@ function AdminBackoffice() {
               );
             })}
           </nav>
+          <button
+            type="button"
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="flex min-h-11 w-full items-center gap-3 rounded-xl border border-red-200 bg-white px-3 py-3 text-left text-xs font-medium text-red-700 transition-colors hover:bg-red-50 disabled:cursor-wait disabled:opacity-60 lg:mt-auto"
+          >
+            <LogOut className="size-4 shrink-0" />
+            <span>{isLoggingOut ? "Signing out…" : "Log out"}</span>
+          </button>
         </aside>
 
       {/* Main Workspace Body */}
@@ -7161,9 +7187,6 @@ function AdminBackoffice() {
                   Manage your administrator profile and sign-in details in one place.
                 </p>
               </div>
-              <span className="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
-                MySQL account
-              </span>
             </div>
 
             <section className="crm-profile-card max-w-4xl rounded-3xl border border-black/[0.08] bg-white p-6 shadow-xs sm:p-7">
