@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 declare(strict_types=1);
 
 session_set_cookie_params(['lifetime'=>0,'path'=>'/','secure'=>(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),'httponly'=>true,'samesite'=>'Strict']);
@@ -127,7 +127,6 @@ function ensure_schema(): void {
 }
 
 function ensure_admin(): void {
-  ensure_schema();
   $pdo = db();
   $stmt = $pdo->prepare('SELECT id FROM admin_users WHERE email = ? LIMIT 1');
   $stmt->execute([ADMIN_EMAIL]);
