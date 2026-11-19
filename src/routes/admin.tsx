@@ -2062,9 +2062,9 @@ function AdminBackoffice() {
             </div>
 
             {/* Filter & Control Toolbar */}
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="space-y-3">
               {/* Stage Filter Pills */}
-              <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1">
+              <div className="flex w-full flex-nowrap items-center gap-1.5 overflow-x-auto pb-2">
                 {["All", ...STAGES].map((st) => {
                   const count =
                     st === "All" ? clients.length : clients.filter((c) => c.stage === st).length;
@@ -2089,22 +2089,22 @@ function AdminBackoffice() {
               </div>
 
               {/* Search, Province & New Lead Button */}
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="relative">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_auto_auto_auto] lg:items-center">
+                <div className="relative sm:col-span-2 lg:col-span-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-[#86868B]" />
                   <input
                     type="text"
                     value={crmSearch}
                     onChange={(e) => setCrmSearch(e.target.value)}
                     placeholder="Search client, syndicate, plant..."
-                    className="h-9 w-44 sm:w-60 rounded-full border border-black/[0.08] bg-white pl-9 pr-3 text-xs text-[#1D1D1F] placeholder-[#86868B] shadow-2xs focus:outline-none focus:ring-1 focus:ring-black/20"
+                    className="h-9 w-full rounded-full border border-black/[0.08] bg-white pl-9 pr-3 text-xs text-[#1D1D1F] placeholder-[#86868B] shadow-2xs focus:outline-none focus:ring-1 focus:ring-black/20"
                   />
                 </div>
 
                 <select
                   value={crmProvinceFilter}
                   onChange={(e) => setCrmProvinceFilter(e.target.value)}
-                  className="h-9 rounded-full border border-black/[0.08] bg-white px-3 text-xs text-[#1D1D1F] shadow-2xs focus:outline-none focus:ring-1 focus:ring-black/20"
+                  className="h-9 w-full rounded-full border border-black/[0.08] bg-white px-3 text-xs text-[#1D1D1F] shadow-2xs focus:outline-none focus:ring-1 focus:ring-black/20 lg:w-auto"
                 >
                   {PROVINCES.map((prov) => (
                     <option key={prov} value={prov}>
@@ -2115,14 +2115,14 @@ function AdminBackoffice() {
 
                 <button
                   onClick={() => setShowAddClientModal(true)}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-[#1D1D1F] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-black transition-all active:scale-95"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full bg-[#1D1D1F] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-black transition-all active:scale-95"
                 >
                   <Plus className="size-3.5" />
                   <span>New Client</span>
                 </button>
                 <button
                   onClick={() => setActiveTab("recycle")}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white px-3 py-2 text-xs font-medium text-[#1D1D1F] shadow-2xs hover:bg-[#F5F5F7]"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-black/[0.08] bg-white px-3 py-2 text-xs font-medium text-[#1D1D1F] shadow-2xs hover:bg-[#F5F5F7]"
                   title="Open recycle bin"
                 >
                   <Recycle className="size-3.5 text-[#6E6E73]" />
