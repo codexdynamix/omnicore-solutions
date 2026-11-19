@@ -1,7 +1,7 @@
-﻿<?php
+<?php
 require_once __DIR__ . '/common.php';
 require_admin();
-ensure_schema();
+
 $action = $_GET['action'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'];
 $body = $method === 'POST' ? (json_decode(file_get_contents('php://input'), true) ?: []) : [];
