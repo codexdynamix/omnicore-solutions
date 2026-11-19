@@ -1555,7 +1555,7 @@ function AdminBackoffice() {
             </button>
 
             <span className="rounded-full border border-amber-200 bg-amber-50 px-3.5 py-1.5 text-xs font-semibold text-amber-800">
-              Development Ã‚Â· browser-only
+              MySQL · authenticated
             </span>
 
             <Link
