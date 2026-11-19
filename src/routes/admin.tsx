@@ -64,6 +64,7 @@ import { crmApi } from "@/lib/crm-api";
 import { WhatsAppIcon } from "@/components/ui/official-badges";
 import { whatsappUrl } from "@/data/site";
 import { ProductPhotoLightbox } from "@/components/product-photo-lightbox";
+import { ProductPhotoPlaceholder } from "@/components/product-photo-placeholder";
 import {
   getStoredAdminProfile,
   saveStoredAdminProfile,
@@ -103,40 +104,6 @@ const PROVINCES = [
   "Matabeleland South",
   "Manicaland",
   "Masvingo",
-];
-
-export type YardPhotoPreset = {
-  label: string;
-  src: string;
-  category: "mining" | "hire" | "farming" | "hardware" | "industry";
-  spec: string;
-  badge: string;
-};
-
-const YARD_PHOTO_PRESETS: YardPhotoPreset[] = [
-  { label: "Jaw Crusher", src: "/images/jaw-crusher.jpg", category: "mining", spec: "5Ã¢â‚¬â€œ15 TPH Primary Crush", badge: "Gold Ore Circuit" },
-  { label: "Ball Mill", src: "/images/ball-mill.jpg", category: "mining", spec: "Continuous Wet Grinding", badge: "Milling Circuit" },
-  { label: "Mining Hammer Mill", src: "/images/hammer-mill.jpg", category: "mining", spec: "1.5Ã¢â‚¬â€œ3.0 TPH High Speed", badge: "Fine Reduction" },
-  { label: "Gold Separator", src: "/images/gold-separator.jpg", category: "mining", spec: "Centrifugal Concentrator", badge: "Free Gold" },
-  { label: "Trommel Wash Plant", src: "/images/trommel.jpg", category: "mining", spec: "15Ã¢â‚¬â€œ30 TPH Scrub & Screen", badge: "Alluvial Gold" },
-  { label: "Shaking Table", src: "/images/shaking-table.jpg", category: "mining", spec: "6-S Deck Gravity Separator", badge: "Concentrate Clean" },
-  { label: "Slurry Pump", src: "/images/slurry-pump.jpg", category: "mining", spec: "High-Head Heavy Slurry", badge: "Tailings / Circuit" },
-  { label: "CAT 320D Excavator", src: "/images/excavator.jpg", category: "hire", spec: "20-Tonne Digger Ã‚Â· 1.0mÃ‚Â³ Bucket", badge: "Wet / Dry Fleet" },
-  { label: "37m Concrete Boom Pump", src: "/images/concrete-pump.jpg", category: "hire", spec: "37m Vertical Ã‚Â· 125mÃ‚Â³/h", badge: "Boom Pump Fleet" },
-  { label: "Self-Loading Mixer", src: "/images/self-loading-mixer.jpg", category: "hire", spec: "4.0mÃ‚Â³ Batch Ã‚Â· 4x4 Off-Road", badge: "Mobile Batching" },
-  { label: "TLB Backhoe", src: "/images/tlb.jpg", category: "hire", spec: "4x4 Turbo Heavy Backhoe", badge: "Trench & Civils" },
-  { label: "Motor Grader", src: "/images/grader.jpg", category: "hire", spec: "140hp Ã‚Â· 12ft Heavy Blade", badge: "Haul Roads" },
-  { label: "Farm Hammer Mill", src: "/images/farm-hammer-mill.jpg", category: "farming", spec: "Maize & Grain 1Ã¢â‚¬â€œ2 TPH", badge: "Stockfeed Milling" },
-  { label: "Feed Mixer (Vertical)", src: "/images/feed-mixer.jpg", category: "farming", spec: "500kg Ã¢â‚¬â€œ 1-Tonne Batch", badge: "Poultry & Dairy" },
-  { label: "Feed Mixer 3-Tonne", src: "/images/feed-mixer-3t.jpg", category: "farming", spec: "3-Tonne Commercial Batch", badge: "Commercial Feedlot" },
-  { label: "Ice Block Plant", src: "/images/ice-block.jpg", category: "farming", spec: "1Ã¢â‚¬â€œ5 Tonne / 24h Blocks", badge: "Cold Chain Storage" },
-  { label: "Electric Fence Machine", src: "/images/electric-fence.jpg", category: "hardware", spec: "Automated Diamond Mesh", badge: "Wire Weaving" },
-  { label: "Barbed Wire Machine", src: "/images/barbed-wire.jpg", category: "hardware", spec: "High-Speed Dual Strand", badge: "Perimeter Security" },
-  { label: "Diesel Fence Machine", src: "/images/diesel-fence.jpg", category: "hardware", spec: "Independent Generator Drive", badge: "Off-Grid Production" },
-  { label: "Double-Twist Fence", src: "/images/double-fence.jpg", category: "hardware", spec: "Heavy Hexagonal Mesh", badge: "Mining & Game Fence" },
-  { label: "3-Phase Electric Motor", src: "/images/electric-motor.jpg", category: "industry", spec: "7.5kW to 55kW 380V", badge: "Heavy Duty Drive" },
-  { label: "Diesel Generator Kit", src: "/images/generator.jpg", category: "industry", spec: "15kVA to 150kVA Silent", badge: "Standby Power" },
-  { label: "Industrial Air Compressor", src: "/images/compressor.jpg", category: "industry", spec: "8Ã¢â‚¬â€œ12 Bar Heavy Duty", badge: "Pneumatic Power" },
 ];
 
 function RecordPager({
@@ -394,7 +361,7 @@ function AdminBackoffice() {
   const [newProdPower, setNewProdPower] = useState("");
   const [newProdPrice, setNewProdPrice] = useState("");
   const [newProdBlurb, setNewProdBlurb] = useState("");
-  const [newProdImage, setNewProdImage] = useState("/images/jaw-crusher.jpg");
+  const [newProdImage, setNewProdImage] = useState("");
   const [newProdGallery, setNewProdGallery] = useState<string[]>([]);
   const [isCmsPreviewOpen, setIsCmsPreviewOpen] = useState(true);
 
@@ -720,7 +687,7 @@ function AdminBackoffice() {
       category: newProdCategory,
       intent: newProdCategory === "hire" ? "hire" : "sale",
       blurb: newProdBlurb.trim() || "Heavy machinery engineered for Zimbabwean site conditions.",
-      image: newProdImage || "/images/jaw-crusher.jpg",
+      image: newProdImage.trim() || undefined,
       imageAlt: newProdName,
       gallery: newProdGallery.length > 0 ? newProdGallery : undefined,
       spec: newProdThroughput.trim() || "Heavy-duty specification",
@@ -744,7 +711,7 @@ function AdminBackoffice() {
     setNewProdPower("");
     setNewProdPrice("");
     setNewProdBlurb("");
-    setNewProdImage("/images/jaw-crusher.jpg");
+    setNewProdImage("");
     setNewProdGallery([]);
   }
 
@@ -763,8 +730,6 @@ function AdminBackoffice() {
   const [cmsPreviewTab, setCmsPreviewTab] = useState<"hero" | "yard" | "whatsapp" | "about" | "divisions" | "footer">("hero");
   const [cmsLayoutMode, setCmsLayoutMode] = useState<"full" | "split">("full");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [newPresetCategoryFilter, setNewPresetCategoryFilter] = useState<string>("all");
-  const [newPhotoPresetSearch, setNewPhotoPresetSearch] = useState("");
   const [zoomedPhoto, setZoomedPhoto] = useState<{ src: string; title: string } | null>(null);
   const [productLightbox, setProductLightbox] = useState<{
     isOpen: boolean;
@@ -782,6 +747,7 @@ function AdminBackoffice() {
     initialIndex: number = 0
   ) {
     const images = [item.image, ...(item.gallery || [])].filter((img): img is string => Boolean(img));
+    if (images.length === 0) return;
     setProductLightbox({
       isOpen: true,
       title: item.name,
@@ -789,7 +755,7 @@ function AdminBackoffice() {
       spec: item.spec,
       price: item.price,
       sku: item.sku || item.id,
-      images: images.length > 0 ? images : ["/images/hero.jpg"],
+      images,
       initialIndex,
     });
   }
@@ -2860,20 +2826,30 @@ function AdminBackoffice() {
                                 openProductLightbox(editingProduct, 0);
                               }
                             }}
-                            className="relative group/primary rounded-xl overflow-hidden border-2 border-[#1FA855] p-0.5 bg-white shadow-xs cursor-pointer hover:border-black transition-all"
-                            title="Click to preview primary photo in large screen"
+                            className={`relative group/primary rounded-xl overflow-hidden p-0.5 bg-white shadow-xs transition-all ${
+                              editingProduct.image
+                                ? "cursor-pointer border-2 border-[#1FA855] hover:border-black"
+                                : "border border-dashed border-black/[0.12]"
+                            }`}
+                            title={editingProduct.image ? "Preview primary product photo" : "No primary photo uploaded"}
                           >
-                            <img
-                              src={editingProduct.image || "/images/jaw-crusher.jpg"}
-                              alt="Primary"
-                              className="size-16 sm:size-20 rounded-lg object-cover"
-                            />
-                            <div className="absolute inset-0 bg-black/35 opacity-0 group-hover/primary:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
-                              <ZoomIn className="size-4.5 text-white drop-shadow-md" />
-                            </div>
-                            <span className="absolute bottom-1 inset-x-1 rounded bg-[#1FA855] text-white text-[9px] font-bold text-center py-0.5 shadow-xs">
-                              Primary
-                            </span>
+                            {editingProduct.image ? (
+                              <>
+                                <img
+                                  src={editingProduct.image}
+                                  alt="Primary product photo"
+                                  className="size-16 rounded-lg object-cover sm:size-20"
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/35 opacity-0 transition-opacity group-hover/primary:opacity-100">
+                                  <ZoomIn className="size-4.5 text-white drop-shadow-md" />
+                                </div>
+                                <span className="absolute inset-x-1 bottom-1 rounded bg-[#1FA855] py-0.5 text-center text-[9px] font-bold text-white shadow-xs">
+                                  Primary
+                                </span>
+                              </>
+                            ) : (
+                              <ProductPhotoPlaceholder className="size-16 rounded-lg sm:size-20" label="" />
+                            )}
                           </div>
 
                           {/* Additional Gallery Photos */}
@@ -2911,7 +2887,8 @@ function AdminBackoffice() {
                                   onClick={() => {
                                     const oldPrimary = editingProduct.image;
                                     const nextGallery = [...(editingProduct.gallery || [])];
-                                    nextGallery[idx] = oldPrimary;
+                                    if (oldPrimary) nextGallery[idx] = oldPrimary;
+                                    else nextGallery.splice(idx, 1);
                                     setEditingProduct({
                                       ...editingProduct,
                                       image: photoUrl,
@@ -2945,77 +2922,70 @@ function AdminBackoffice() {
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
                         {/* Prominent High-Definition Preview Canvas (7 cols) */}
                         <div className="lg:col-span-7 space-y-3">
-                          <div
-                            role="button"
-                            tabIndex={0}
-                            onClick={() => openProductLightbox(editingProduct, 0)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
-                                openProductLightbox(editingProduct, 0);
-                              }
-                            }}
-                            className="relative w-full h-64 sm:h-76 md:h-84 rounded-2xl overflow-hidden bg-black/[0.05] border border-black/[0.08] shadow-sm group cursor-pointer"
-                            title="Click to open photos in full-screen large preview"
-                          >
-                            <img
-                              src={editingProduct.image || "/images/jaw-crusher.jpg"}
-                              alt={editingProduct.name}
-                              className="size-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).src = "/images/hero.jpg";
-                              }}
-                            />
-                            {/* Top Badges Overlay */}
-                            <div className="absolute top-3 inset-x-3 flex items-center justify-between pointer-events-none">
-                              <span className="rounded-full bg-black/75 px-3 py-1 text-[11px] font-medium text-white backdrop-blur-md flex items-center gap-2 shadow-md">
-                                <span className="size-2 rounded-full bg-[#1FA855] animate-pulse" />
-                                <span>Active Primary Photo</span>
-                              </span>
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
+                          {editingProduct.image ? (
+                            <div
+                              role="button"
+                              tabIndex={0}
+                              onClick={() => openProductLightbox(editingProduct, 0)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  e.preventDefault();
                                   openProductLightbox(editingProduct, 0);
-                                }}
-                                className="pointer-events-auto rounded-full bg-black/60 hover:bg-black p-2 text-white shadow-md backdrop-blur-md transition-all active:scale-90 cursor-pointer"
-                                title="Zoom & Inspect HD Image in Large Screen (Z)"
-                              >
-                                <ZoomIn className="size-4" />
-                              </button>
-                            </div>
-
-                            {/* Bottom Identity Overlay */}
-                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 pt-10 text-white">
-                              <div className="flex items-center justify-between gap-2">
-                                <div className="min-w-0">
-                                  <p className="text-sm font-semibold truncate leading-tight">{editingProduct.name}</p>
-                                  <div className="flex items-center gap-2 mt-1 text-xs text-white/80">
-                                    <span className="capitalize font-medium">{editingProduct.category} Division</span>
-                                    <span>Ã¢â‚¬Â¢</span>
-                                    <span className="font-mono text-[11px]">{editingProduct.sku || editingProduct.id}</span>
-                                  </div>
-                                </div>
-                                <span className="shrink-0 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-1 text-[10px] font-semibold text-white group-hover:bg-[#1FA855] transition-all">
-                                  View Large Screen Ã¢â€ â€”
+                                }
+                              }}
+                              className="group relative h-64 w-full cursor-pointer overflow-hidden rounded-2xl border border-black/[0.08] bg-black/[0.05] shadow-sm sm:h-76 md:h-84"
+                              title="Click to open product photos"
+                            >
+                              <img
+                                src={editingProduct.image}
+                                alt={editingProduct.imageAlt || editingProduct.name}
+                                className="size-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                              />
+                              <div className="pointer-events-none absolute inset-x-3 top-3 flex items-center justify-between">
+                                <span className="flex items-center gap-2 rounded-full bg-black/75 px-3 py-1 text-[11px] font-medium text-white shadow-md backdrop-blur-md">
+                                  <span className="size-2 animate-pulse rounded-full bg-[#1FA855]" />
+                                  <span>Primary product photo</span>
                                 </span>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    openProductLightbox(editingProduct, 0);
+                                  }}
+                                  className="pointer-events-auto rounded-full bg-black/60 p-2 text-white shadow-md backdrop-blur-md transition-all hover:bg-black active:scale-90"
+                                  title="Preview product photo"
+                                >
+                                  <ZoomIn className="size-4" />
+                                </button>
+                              </div>
+                              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 pt-10 text-white">
+                                <p className="truncate text-sm font-semibold leading-tight">{editingProduct.name}</p>
+                                <div className="mt-1 flex items-center gap-2 text-xs text-white/80">
+                                  <span className="font-medium capitalize">{editingProduct.category} Division</span>
+                                  <span>·</span>
+                                  <span className="font-mono text-[11px]">{editingProduct.sku || editingProduct.id}</span>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          ) : (
+                            <ProductPhotoPlaceholder className="h-64 rounded-2xl border border-dashed border-black/[0.12] sm:h-76 md:h-84" label="No product photo uploaded" />
+                          )}
 
                           <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#86868B]">
                             <span className="flex items-center gap-1.5">
-                              <CheckCircle2 className="size-3.5 text-[#1B833E]" />
-                              <span>Live high-resolution preview connected</span>
+                              <CheckCircle2 className={`size-3.5 ${editingProduct.image ? "text-[#1B833E]" : "text-[#7b867e]"}`} />
+                              <span>{editingProduct.image ? "Product photo uploaded" : "No product photo added yet"}</span>
                             </span>
-                            <button
-                              type="button"
-                              onClick={() => openProductLightbox(editingProduct, 0)}
-                              className="font-medium text-[#1D1D1F] hover:underline inline-flex items-center gap-1 cursor-pointer"
-                            >
-                              <Maximize2 className="size-3" />
-                              <span>Inspect HD Fullscreen</span>
-                            </button>
+                            {editingProduct.image && (
+                              <button
+                                type="button"
+                                onClick={() => openProductLightbox(editingProduct, 0)}
+                                className="inline-flex cursor-pointer items-center gap-1 font-medium text-[#1D1D1F] hover:underline"
+                              >
+                                <Maximize2 className="size-3" />
+                                <span>Preview photo</span>
+                              </button>
+                            )}
                           </div>
                         </div>
 
@@ -3376,17 +3346,20 @@ function AdminBackoffice() {
                       <div className="rounded-xl border border-black/[0.06] bg-[#F9F9FA] p-3 text-[11px] space-y-2 font-mono text-[#1D1D1F]">
                         {/* Machine Visual Thumbnail */}
                         <div className="relative h-36 w-full rounded-lg overflow-hidden bg-black/[0.05] border border-black/[0.05]">
-                          <img
-                            src={editingProduct.image || "/images/jaw-crusher.jpg"}
-                            alt={editingProduct.name}
-                            className="size-full object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = "/images/hero.jpg";
-                            }}
-                          />
-                          <span className="absolute top-1.5 left-1.5 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-medium text-white backdrop-blur-xs font-sans capitalize">
-                            {editingProduct.category}
-                          </span>
+                          {editingProduct.image ? (
+                            <>
+                              <img
+                                src={editingProduct.image}
+                                alt={editingProduct.imageAlt || editingProduct.name}
+                                className="size-full object-cover"
+                              />
+                              <span className="absolute left-1.5 top-1.5 rounded bg-black/70 px-1.5 py-0.5 font-sans text-[9px] font-medium capitalize text-white backdrop-blur-xs">
+                                {editingProduct.category}
+                              </span>
+                            </>
+                          ) : (
+                            <ProductPhotoPlaceholder label="" />
+                          )}
                         </div>
 
                         <div>
@@ -3628,14 +3601,11 @@ function AdminBackoffice() {
                           <td className="py-3 px-4">
                             <div className="flex items-center gap-3">
                               <div className="size-11 rounded-xl overflow-hidden bg-black/[0.04] border border-black/[0.06] shrink-0 shadow-2xs">
-                                <img
-                                  src={item.image || "/images/hero.jpg"}
-                                  alt={item.name}
-                                  className="size-full object-cover"
-                                  onError={(e) => {
-                                    (e.target as HTMLImageElement).src = "/images/hero.jpg";
-                                  }}
-                                />
+                                {item.image ? (
+                                  <img src={item.image} alt={item.imageAlt || item.name} className="size-full object-cover" />
+                                ) : (
+                                  <ProductPhotoPlaceholder label="" />
+                                )}
                               </div>
                               <div>
                                 <span className="font-semibold text-[#1D1D1F] block">{item.name}</span>
@@ -3810,14 +3780,11 @@ function AdminBackoffice() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex min-w-0 items-start gap-3">
                       <div className="size-16 shrink-0 overflow-hidden rounded-xl border border-black/[0.06] bg-black/[0.04]">
-                        <img
-                          src={peekProduct.image || "/images/hero.jpg"}
-                          alt={peekProduct.name}
-                          className="size-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = "/images/hero.jpg";
-                          }}
-                        />
+                        {peekProduct.image ? (
+                          <img src={peekProduct.image} alt={peekProduct.imageAlt || peekProduct.name} className="size-full object-cover" />
+                        ) : (
+                          <ProductPhotoPlaceholder label="" />
+                        )}
                       </div>
                       <div className="min-w-0">
                         <p className="font-mono text-[11px] text-[#86868B]">{peekProduct.sku || peekProduct.id}</p>
@@ -3896,206 +3863,59 @@ function AdminBackoffice() {
                   </div>
 
                   <form onSubmit={handleCreateProduct} className="mt-4 space-y-3.5 text-xs">
-                    {/* Equipment Photo & Live Preview in Add Modal */}
-                    <div className="rounded-xl border border-black/[0.08] bg-[#FBFBFC] p-3.5 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="font-semibold text-[#1D1D1F] block text-xs">
-                            Equipment Photo & Live Preview
-                          </span>
-                          <span className="text-[11px] text-[#86868B]">
-                            Upload a photo from your device or select from Harare yard photo library.
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col sm:flex-row gap-4 items-start">
-                        {/* Live Photo Preview */}
-                        <div
-                          role="button"
-                          tabIndex={0}
-                          onClick={() => {
-                            setProductLightbox({
-                              isOpen: true,
-                              title: newProdName || "New Machinery Visual Preview",
-                              category: newProdCategory,
-                              price: newProdPrice,
-                              images: [newProdImage || "/images/jaw-crusher.jpg", ...newProdGallery].filter(Boolean),
-                              initialIndex: 0,
-                            });
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                              setProductLightbox({
+                    <div className="rounded-xl border border-black/[0.08] bg-[#FBFBFC] p-4">
+                      <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-[8rem_minmax(0,1fr)]">
+                        <div className="size-32 overflow-hidden rounded-xl border border-black/[0.08] bg-white">
+                          {newProdImage.trim() ? (
+                            <button
+                              type="button"
+                              onClick={() => setProductLightbox({
                                 isOpen: true,
-                                title: newProdName || "New Machinery Visual Preview",
+                                title: newProdName || "New machinery",
                                 category: newProdCategory,
                                 price: newProdPrice,
-                                images: [newProdImage || "/images/jaw-crusher.jpg", ...newProdGallery].filter(Boolean),
+                                images: [newProdImage, ...newProdGallery].filter(Boolean),
                                 initialIndex: 0,
-                              });
-                            }
-                          }}
-                          className="relative size-28 sm:size-32 rounded-xl overflow-hidden bg-black/[0.05] border border-black/[0.08] shrink-0 shadow-xs group cursor-pointer"
-                          title="Click to preview photo in large screen"
-                        >
-                          <img
-                            src={newProdImage || "/images/jaw-crusher.jpg"}
-                            alt="Preview"
-                            className="size-full object-cover object-center group-hover:scale-105 transition-transform"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = "/images/hero.jpg";
-                            }}
-                          />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 p-1">
-                            <span className="flex items-center gap-1 text-[9px] text-white font-medium bg-black/70 px-2 py-0.5 rounded-full">
-                              <ZoomIn className="size-2.5" />
-                              <span>View Large</span>
-                            </span>
-                            <label
-                              onClick={(e) => e.stopPropagation()}
-                              className="cursor-pointer text-white text-[9px] font-semibold bg-white/20 hover:bg-white hover:text-black px-2 py-0.5 rounded-md transition-colors"
+                              })}
+                              className="size-full"
+                              aria-label="Preview uploaded product photo"
                             >
-                              Change
-                              <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => handleImageUpload(e, false)}
-                                className="hidden"
-                              />
-                            </label>
-                          </div>
-                          <span className="absolute bottom-1 right-1 rounded bg-black/60 px-1.5 py-0.5 text-[9px] font-medium text-white backdrop-blur-xs">
-                            Live Preview
-                          </span>
+                              <img src={newProdImage} alt={newProdName || "Product preview"} className="size-full object-cover" />
+                            </button>
+                          ) : (
+                            <ProductPhotoPlaceholder />
+                          )}
                         </div>
 
-                        {/* Upload & Presets */}
-                        <div className="flex-1 space-y-3 w-full">
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <label className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.1] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#1D1D1F] shadow-2xs hover:bg-[#F5F5F7] cursor-pointer transition-all active:scale-95">
-                              <Upload className="size-3.5 text-[#1D1D1F]" />
-                              <span>Upload Machine Image</span>
-                              <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => handleImageUpload(e, false)}
-                                className="hidden"
-                              />
-                            </label>
-
-                            {/* Instant Preset Search */}
-                            <div className="relative min-w-[180px]">
-                              <Search className="absolute left-2.5 top-2 size-3 text-[#86868B]" />
-                              <input
-                                type="text"
-                                value={newPhotoPresetSearch}
-                                onChange={(e) => setNewPhotoPresetSearch(e.target.value)}
-                                placeholder="Search presets..."
-                                className="w-full h-7 rounded-full border border-black/[0.08] bg-[#F5F5F7] pl-7 pr-2.5 text-[11px] text-[#1D1D1F] focus:bg-white focus:outline-none"
-                              />
-                              {newPhotoPresetSearch && (
-                                <button
-                                  type="button"
-                                  onClick={() => setNewPhotoPresetSearch("")}
-                                  className="absolute right-2 top-2 text-[#86868B] hover:text-[#1D1D1F]"
-                                >
-                                  <X className="size-3" />
-                                </button>
-                              )}
-                            </div>
+                        <div className="min-w-0 space-y-3">
+                          <div>
+                            <h4 className="text-sm font-semibold text-[#26322b]">Product photo <span className="font-normal text-[#68756c]">(optional)</span></h4>
+                            <p className="mt-1 text-xs leading-relaxed text-[#68756c]">
+                              No photo is shown until you upload one or enter its URL.
+                            </p>
                           </div>
 
-                          {/* Category Filter Pills for Add Modal */}
-                          <div className="flex flex-wrap items-center gap-1">
-                            {[
-                              { id: "all", label: "All Fleet" },
-                              { id: "mining", label: "Mining" },
-                              { id: "hire", label: "Hire" },
-                              { id: "farming", label: "Farming" },
-                              { id: "hardware", label: "Hardware" },
-                              { id: "industry", label: "Industry" },
-                            ].map((f) => (
-                              <button
-                                key={f.id}
-                                type="button"
-                                onClick={() => setNewPresetCategoryFilter(f.id)}
-                                className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all ${
-                                  newPresetCategoryFilter === f.id
-                                    ? "bg-[#1D1D1F] text-white font-semibold shadow-2xs"
-                                    : "bg-black/[0.04] text-[#6E6E73] hover:text-[#1D1D1F]"
-                                }`}
-                              >
-                                {f.label}
-                              </button>
-                            ))}
-                          </div>
+                          <label className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-lg border border-[#d5ddd7] bg-white px-3 text-xs font-semibold text-[#344b3c] transition-colors hover:bg-[#f1f5f1]">
+                            <Upload className="size-4" />
+                            <span>Upload product photo</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleImageUpload(e, false)}
+                              className="hidden"
+                            />
+                          </label>
 
-                          {/* Roomy Grid of Verified Preset Photo Cards */}
-                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-56 overflow-y-auto p-2 rounded-xl bg-[#F9F9FA] border border-black/[0.06]">
-                            {YARD_PHOTO_PRESETS.filter((p) => {
-                              const matchesCat = newPresetCategoryFilter === "all" || p.category === newPresetCategoryFilter;
-                              const matchesSearch =
-                                !newPhotoPresetSearch ||
-                                p.label.toLowerCase().includes(newPhotoPresetSearch.toLowerCase()) ||
-                                p.spec.toLowerCase().includes(newPhotoPresetSearch.toLowerCase());
-                              return matchesCat && matchesSearch;
-                            }).map((preset) => {
-                              const isSelected = newProdImage === preset.src;
-                              return (
-                                <button
-                                  type="button"
-                                  key={preset.src}
-                                  onClick={() => setNewProdImage(preset.src)}
-                                  className={`group relative flex flex-col text-left rounded-xl p-2 border transition-all ${
-                                    isSelected
-                                      ? "border-[#1D1D1F] bg-white ring-2 ring-[#1D1D1F] shadow-xs"
-                                      : "border-black/[0.08] bg-white hover:border-black/[0.2]"
-                                  }`}
-                                >
-                                  <div className="relative h-20 w-full rounded-lg overflow-hidden bg-black/[0.04] mb-1.5">
-                                    <img
-                                      src={preset.src}
-                                      alt={preset.label}
-                                      className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                      onError={(e) => {
-                                        (e.target as HTMLImageElement).src = "/images/hero.jpg";
-                                      }}
-                                    />
-                                    <span className="absolute top-1 left-1 rounded bg-black/70 px-1.5 py-0.5 text-[8px] font-semibold text-white uppercase tracking-wider backdrop-blur-xs">
-                                      {preset.category}
-                                    </span>
-                                    {isSelected && (
-                                      <div className="absolute top-1 right-1 size-5 rounded-full bg-[#1FA855] text-white flex items-center justify-center shadow-xs">
-                                        <Check className="size-3 stroke-[2.5]" />
-                                      </div>
-                                    )}
-                                  </div>
-
-                                  <div className="min-w-0">
-                                    <p className="text-[11px] font-semibold text-[#1D1D1F] truncate group-hover:text-black">
-                                      {preset.label}
-                                    </p>
-                                    <p className="text-[10px] text-[#6E6E73] truncate">
-                                      {preset.spec}
-                                    </p>
-                                  </div>
-                                </button>
-                              );
-                            })}
-                          </div>
-
-                          <div className="flex items-center gap-2 pt-1">
-                            <span className="text-[11px] font-medium text-[#1D1D1F] shrink-0">Custom URL / Path:</span>
+                          <label className="block text-xs font-medium text-[#445249]">
+                            Or enter a photo URL/path
                             <input
                               type="text"
                               value={newProdImage}
                               onChange={(e) => setNewProdImage(e.target.value)}
-                              placeholder="/images/... or https://..."
-                              className="w-full h-8 rounded-xl border border-black/[0.08] bg-white px-3 text-xs text-[#1D1D1F] focus:outline-none font-mono text-[11px]"
+                              placeholder="https://… or /uploads/…"
+                              className="mt-1.5 h-10 w-full rounded-lg border border-[#cbd4cd] bg-white px-3 font-mono text-xs focus:outline-none"
                             />
-                          </div>
+                          </label>
                         </div>
                       </div>
                     </div>

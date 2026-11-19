@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { MediaImage } from "@/components/media-image";
+import { ProductPhotoPlaceholder } from "@/components/product-photo-placeholder";
 import { type Equipment, whatsappUrl } from "@/data/site";
 import { WhatsAppIcon } from "@/components/ui/official-badges";
 import { ProductPhotoLightbox } from "@/components/product-photo-lightbox";
@@ -9,32 +10,39 @@ export function EquipmentCard({ item }: { item: Equipment }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const message = `Hello Omnicore, I would like to inquire about the ${item.name} (${item.intent === "hire" ? "Hire" : "Purchase"}). Please provide current availability and pricing.`;
 
-  const allPhotos = [item.image, ...(item.gallery || [])].filter(Boolean);
+  const allPhotos = [item.image, ...(item.gallery || [])].filter(
+    (photo): photo is string => Boolean(photo),
+  );
+  const primaryPhoto = item.image || allPhotos[0];
   const displayPrice = item.priceUSD || item.price || item.priceNote || "Inquire for quote";
   const priceTerms = item.priceNote && item.priceNote !== displayPrice ? item.priceNote : undefined;
 
   return (
     <>
       <article className="group flex flex-col overflow-hidden rounded-3xl bg-white border border-black/[0.06] p-4 transition-all duration-300 hover:border-black/[0.12] hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] hover:-translate-y-0.5">
-        {/* Image with Apple iOS squircle radius & large-screen preview trigger */}
+        {/* Product photos appear only after one has been provided. */}
         <div
-          role="button"
-          tabIndex={0}
-          onClick={() => setLightboxOpen(true)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              setLightboxOpen(true);
-            }
-          }}
-          className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-[#f5f5f7] cursor-pointer"
-          title={`Click to preview ${item.name} photo in large screen`}
+          className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-[#f5f5f7] ${
+            allPhotos.length > 0 ? "cursor-pointer" : ""
+          }`}
+          title={allPhotos.length > 0 ? `Click to preview ${item.name} photos` : undefined}
         >
-          <MediaImage
-            src={item.image}
-            alt={item.imageAlt}
-            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-          />
+          {primaryPhoto ? (
+            <button
+              type="button"
+              onClick={() => setLightboxOpen(true)}
+              className="size-full"
+              aria-label={`View ${item.name} photos`}
+            >
+              <MediaImage
+                src={primaryPhoto}
+                alt={item.imageAlt || `${item.name} photo`}
+                className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              />
+            </button>
+          ) : (
+            <ProductPhotoPlaceholder />
+          )}
 
           {/* Minimal frosted pill */}
           <div className="absolute top-3 left-3 flex items-center gap-1.5 pointer-events-none">
@@ -48,27 +56,28 @@ export function EquipmentCard({ item }: { item: Equipment }) {
             ) : null}
           </div>
 
-          {/* Top-Right Preview Large Screen Button */}
-          <div className="absolute top-3 right-3 flex items-center gap-1.5">
-            {allPhotos.length > 1 && (
-              <span className="flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-md shadow-xs">
-                <Images className="size-3" />
-                <span>{allPhotos.length}</span>
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setLightboxOpen(true);
-              }}
-              className="flex items-center gap-1 rounded-full bg-black/60 hover:bg-black text-white px-2.5 py-1 text-[11px] font-medium backdrop-blur-md shadow-sm transition-all sm:opacity-0 sm:group-hover:opacity-100 active:scale-95 cursor-pointer"
-              title="Open full photo in large screen"
-            >
-              <Maximize2 className="size-3" />
-              <span className="hidden sm:inline">Preview</span>
-            </button>
-          </div>
+          {allPhotos.length > 0 && (
+            <div className="absolute top-3 right-3 flex items-center gap-1.5">
+              {allPhotos.length > 1 && (
+                <span className="flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-md shadow-xs">
+                  <Images className="size-3" />
+                  <span>{allPhotos.length}</span>
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxOpen(true);
+                }}
+                className="flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-medium text-white shadow-sm backdrop-blur-md transition-all hover:bg-black sm:opacity-0 sm:group-hover:opacity-100 active:scale-95"
+                title="Open product photos"
+              >
+                <Maximize2 className="size-3" />
+                <span className="hidden sm:inline">Preview</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Content */}
@@ -98,15 +107,17 @@ export function EquipmentCard({ item }: { item: Equipment }) {
             </div>
 
             <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => setLightboxOpen(true)}
-                className="inline-flex items-center gap-1 rounded-full bg-black/[0.05] hover:bg-black/[0.1] text-[#1d1d1f] px-3 py-1.5 text-xs font-semibold transition-all active:scale-95 cursor-pointer"
-                title="View machine photos"
-              >
-                <Maximize2 className="size-3" />
-                <span className="hidden xs:inline">Photos</span>
-              </button>
+              {allPhotos.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setLightboxOpen(true)}
+                  className="inline-flex items-center gap-1 rounded-full bg-black/[0.05] px-3 py-1.5 text-xs font-semibold text-[#1d1d1f] transition-all hover:bg-black/[0.1] active:scale-95"
+                  title="View machine photos"
+                >
+                  <Maximize2 className="size-3" />
+                  <span className="hidden xs:inline">Photos</span>
+                </button>
+              )}
 
               <a
                 href={whatsappUrl(message)}

@@ -39,7 +39,7 @@ export function ProductPhotoLightbox({
 }: ProductPhotoLightboxProps) {
   // Normalize images list (filter empty strings and duplicates)
   const validImages = Array.from(new Set(images.filter(Boolean)));
-  const photos = validImages.length > 0 ? validImages : ["/images/hero.jpg"];
+  const photos = validImages;
 
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [zoomLevel, setZoomLevel] = useState<1 | 1.75 | 2.5>(1);
@@ -124,7 +124,7 @@ export function ProductPhotoLightbox({
     return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
   }, []);
 
-  if (!isOpen) return null;
+  if (!isOpen || photos.length === 0) return null;
 
   const currentPhoto = photos[currentIndex] || photos[0];
   const whatsappMsg = `Hello Omnicore Solutions, I am viewing the high-resolution photo of ${title} (${intent === "hire" ? "Hire" : "Purchase"}${sku ? ` - SKU: ${sku}` : ""}). Please send further details and availability.`;
@@ -274,7 +274,7 @@ export function ProductPhotoLightbox({
             alt={`${title} - Photo ${currentIndex + 1}`}
             className="max-h-[75vh] sm:max-h-[82vh] w-auto max-w-[94vw] sm:max-w-[88vw] object-contain rounded-xl shadow-2xl transition-opacity duration-200"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = "/images/hero.jpg";
+              e.currentTarget.hidden = true;
             }}
           />
         </div>
@@ -339,7 +339,7 @@ export function ProductPhotoLightbox({
                   alt={`Thumbnail ${idx + 1}`}
                   className="size-full object-cover"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = "/images/hero.jpg";
+                    e.currentTarget.hidden = true;
                   }}
                 />
                 <span className="absolute bottom-0.5 right-1 text-[8px] font-bold text-white drop-shadow-md">

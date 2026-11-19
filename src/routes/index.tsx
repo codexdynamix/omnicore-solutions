@@ -191,7 +191,7 @@ function Home() {
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">From the Cranborne yard</p>
               <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                A catalogue that actually looks like the machines.
+                Equipment for the work in front of you.
               </h2>
             </div>
             <Link to="/catalogue" className="inline-flex items-center text-sm font-medium text-accent hover:underline">

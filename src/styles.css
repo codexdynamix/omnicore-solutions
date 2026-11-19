@@ -361,6 +361,29 @@
   border-radius: 0.9rem !important;
   background-color: #fff !important;
   box-shadow: 0 20px 55px rgb(27 37 31 / 22%) !important;
+  scrollbar-gutter: stable;
+  scrollbar-color: #b7c2ba transparent;
+  scrollbar-width: thin;
+}
+
+.crm-modal-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.crm-modal-panel::-webkit-scrollbar-track {
+  margin-block: 0.75rem;
+  background: transparent;
+}
+
+.crm-modal-panel::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: #b7c2ba;
+  background-clip: content-box;
+}
+
+.crm-modal-panel::-webkit-scrollbar-thumb:hover {
+  background-color: #87958a;
 }
 
 .crm-modal-panel [class*="border-b"] {
