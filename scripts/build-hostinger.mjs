@@ -31,6 +31,28 @@ if (existsSync(publicDir)) {
   cpSync(publicDir, distDir, { recursive: true });
 }
 
+// 5. Deploy PHP/MySQL API and generated private credentials
+const serverDir = resolve("server");
+if (existsSync(serverDir)) {
+  cpSync(serverDir, distDir, { recursive: true });
+}
+const privateDir = join(distDir, "private");
+mkdirSync(privateDir, { recursive: true });
+const escapePhpString = (value) => String(value ?? "")
+  .replace(/\\/g, "\\\\")
+  .replace(/'/g, "\\'")
+  .replace(/\r/g, "")
+  .replace(/\n/g, "");
+const phpConfig = `<?php
+// Generated during deployment. Never commit database credentials.
+define("DB_HOST", "${escapePhpString(process.env.HOSTINGER_DB_HOST)}");
+define("DB_NAME", "${escapePhpString(process.env.HOSTINGER_DB_NAME)}");
+define("DB_USER", "${escapePhpString(process.env.HOSTINGER_DB_USER)}");
+define("DB_PASSWORD", "${escapePhpString(process.env.HOSTINGER_DB_PASSWORD)}");
+define("ADMIN_EMAIL", "${escapePhpString(process.env.CRM_ADMIN_EMAIL)}");
+define("ADMIN_PASSWORD", "${escapePhpString(process.env.CRM_ADMIN_PASSWORD)}");
+`;
+writeFileSync(join(privateDir, "config.php"), phpConfig, "utf8");
 // 5. Detect latest production JS and CSS bundles
 const assetsDir = join(distDir, "assets");
 let mainJsFile = "";
@@ -258,7 +280,7 @@ function writeAdminSpaFallback() {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Operations Backoffice · Omnicore</title>
+  <title>Operations Backoffice Â· Omnicore</title>
   ${mainCssFile ? `<link rel="stylesheet" crossorigin href="/assets/${mainCssFile}">` : ""}
   <script>
     window.$R = window.$R || {};
@@ -295,7 +317,7 @@ const htaccessContent = `# =====================================================
   RewriteEngine On
   RewriteBase /
 
-  # Backoffice — map /admin before Hostinger/directory rules can 404 it
+  # Backoffice â€” map /admin before Hostinger/directory rules can 404 it
   RewriteRule ^admin$ /admin.html [L]
   RewriteRule ^admin/$ /admin.html [L]
 
