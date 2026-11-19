@@ -1,20 +1,25 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/common.php';
 
 $action = $_GET['action'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'login') {
-  try {\n  ensure_admin();\n   = json_decode(file_get_contents('php://input'), true) ?: [];
-  $email = trim((string)($body['email'] ?? ''));
-  $password = (string)($body['password'] ?? '');
-  $stmt = db()->prepare('SELECT id,password_hash,email,full_name,role,phone,yard_location FROM admin_users WHERE email = ? LIMIT 1');
-  $stmt->execute([$email]);
-  $user = $stmt->fetch();
-  if (!$user || !password_verify($password, $user['password_hash'])) json_response(['ok'=>false,'error'=>'Invalid email or password'], 401);
-  session_regenerate_id(true);
-  $_SESSION['admin_id'] = $user['id'];
-  $_SESSION['admin_email'] = $user['email'];
-  json_response(['ok'=>true,'admin'=>['email'=>$user['email'],'fullName'=>$user['full_name'],'role'=>$user['role'],'phone'=>$user['phone'],'yardLocation'=>$user['yard_location']]]);
+  try {
+    ensure_admin();
+    $body = json_decode(file_get_contents('php://input'), true) ?: [];
+    $email = trim((string)($body['email'] ?? ''));
+    $password = (string)($body['password'] ?? '');
+    $stmt = db()->prepare('SELECT id,password_hash,email,full_name,role,phone,yard_location FROM admin_users WHERE email = ? LIMIT 1');
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+    if (!$user || !password_verify($password, $user['password_hash'])) json_response(['ok'=>false,'error'=>'Invalid email or password'], 401);
+    session_regenerate_id(true);
+    $_SESSION['admin_id'] = $user['id'];
+    $_SESSION['admin_email'] = $user['email'];
+    json_response(['ok'=>true,'admin'=>['email'=>$user['email'],'fullName'=>$user['full_name'],'role'=>$user['role'],'phone'=>$user['phone'],'yardLocation'=>$user['yard_location']]]);
+  } catch (Throwable $e) {
+    json_response(['ok'=>false,'error'=>'Server database error: '.$e->getMessage()], 500);
+  }
 }
 
 if ($action === 'me' && $_SERVER['REQUEST_METHOD'] === 'GET') {
