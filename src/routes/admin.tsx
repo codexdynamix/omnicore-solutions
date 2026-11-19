@@ -60,6 +60,7 @@ import {
   saveStoredDeployments,
   DEFAULT_DEPLOYMENTS,
 } from "@/lib/cms-store";
+import { crmApi } from "@/lib/crm-api";
 import { WhatsAppIcon } from "@/components/ui/official-badges";
 import { whatsappUrl } from "@/data/site";
 import { ProductPhotoLightbox } from "@/components/product-photo-lightbox";
@@ -339,6 +340,39 @@ function AdminBackoffice() {
     setEditingGalleryUrl("");
   }
 
+  const [authChecking, setAuthChecking] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+
+  async function hydrateFromDatabase() {
+    try {
+      const data = await crmApi.list();
+      if (Array.isArray(data.crm)) setClients(data.crm);
+      if (Array.isArray(data.equipment)) setEquipmentList(data.equipment);
+      if (Array.isArray(data.deployments)) setDeploymentsList(data.deployments);
+      if (Array.isArray(data.recycle)) setRecycleBin(data.recycle);
+      if (data.siteCopy) setSiteCopy(data.siteCopy);
+      if (data.profile) {
+        setAdminProfile(data.profile);
+        setProfileName(data.profile.fullName || "");
+        setProfileEmail(data.profile.email || "");
+        setProfileRole(data.profile.role || "");
+        setProfilePhone(data.profile.phone || "");
+        setProfileLocation(data.profile.yardLocation || "");
+      }
+    } catch (error) {
+      triggerToast(error instanceof Error ? error.message : "Could not load database records");
+    }
+  }
+
+  useEffect(() => {
+    crmApi.me().then(async () => {
+      setAuthenticated(true);
+      await hydrateFromDatabase();
+    }).catch(() => setAuthenticated(false)).finally(() => setAuthChecking(false));
+  }, []);
   const [activeTab, setActiveTab] = useState<Tab>("crm");
   const [clients, setClients] = useState<CRMClient[]>(getStoredCRMClients);
   const [equipmentList, setEquipmentList] = useState<ExtendedEquipment[]>(getStoredEquipment);
