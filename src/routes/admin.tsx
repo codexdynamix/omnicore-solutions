@@ -1618,7 +1618,7 @@ function AdminBackoffice() {
               </span>
             </button>
 
-            <span className="whitespace-nowrap rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1.5 text-xs font-semibold text-amber-800 sm:px-3.5">
+            <span className="crm-status-indicator whitespace-nowrap rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1.5 text-xs font-semibold text-amber-800 sm:px-3.5">
               <span className="sm:hidden">MySQL</span>
               <span className="hidden sm:inline">MySQL · authenticated</span>
             </span>
@@ -2005,13 +2005,13 @@ function AdminBackoffice() {
               </form>
             ) : (
               <>
-            <div className="space-y-1">
+            <div className="crm-page-heading space-y-1">
               <h1 className="text-2xl font-semibold tracking-tight text-[#1D1D1F]">Client pipeline</h1>
               <p className="text-sm text-[#6E6E73]">Track client relationships, tender progress, and follow-up activity.</p>
             </div>
             {/* KPI Executive Summary Strip */}
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <div className="rounded-2xl border border-black/[0.04] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+            <div className="crm-kpi-grid grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="crm-kpi-card rounded-2xl border border-black/[0.04] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
                 <span className="text-[11px] font-medium text-[#86868B] uppercase tracking-wider">
                   Active Tender Pipeline
                 </span>
@@ -2025,7 +2025,7 @@ function AdminBackoffice() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-black/[0.04] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+              <div className="crm-kpi-card rounded-2xl border border-black/[0.04] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
                 <span className="text-[11px] font-medium text-[#86868B] uppercase tracking-wider">
                   Closed / Won Revenue
                 </span>
@@ -2039,7 +2039,7 @@ function AdminBackoffice() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-black/[0.04] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+              <div className="crm-kpi-card rounded-2xl border border-black/[0.04] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
                 <span className="text-[11px] font-medium text-[#86868B] uppercase tracking-wider">
                   High Priority Tenders
                 </span>
@@ -2051,7 +2051,7 @@ function AdminBackoffice() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-black/[0.04] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+              <div className="crm-kpi-card rounded-2xl border border-black/[0.04] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
                 <span className="text-[11px] font-medium text-[#86868B] uppercase tracking-wider">
                   Client Base in Zimbabwe
                 </span>
@@ -2067,7 +2067,7 @@ function AdminBackoffice() {
             {/* Filter & Control Toolbar */}
             <div className="space-y-3">
               {/* Stage Filter Pills */}
-              <div className="flex w-full flex-nowrap items-center gap-1.5 overflow-x-auto pb-2">
+              <div className="crm-stage-filters flex w-full flex-nowrap items-center gap-1.5 overflow-x-auto pb-2">
                 {["All", ...STAGES].map((st) => {
                   const count =
                     st === "All" ? clients.length : clients.filter((c) => c.stage === st).length;
@@ -2075,6 +2075,7 @@ function AdminBackoffice() {
                   return (
                     <button
                       key={st}
+                      aria-pressed={isCurrent}
                       onClick={() => setCrmStageFilter(st)}
                       className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all ${
                         isCurrent
