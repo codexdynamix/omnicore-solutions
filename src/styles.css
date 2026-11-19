@@ -162,6 +162,12 @@
   box-shadow: 0 0 0 2px #527186;
 }
 
+.crm-brand-location {
+  border: 1px solid rgb(226 232 240 / 30%);
+  background-color: rgb(255 255 255 / 12%) !important;
+  color: #e2e8f0 !important;
+}
+
 .crm-sidebar-nav {
   border: 2px solid #526b80 !important;
   background-color: #192f44 !important;
@@ -200,7 +206,7 @@
 }
 
 .crm-backoffice main div[class*="rounded-2xl"][class*="bg-white"] {
-  border: 1.5px solid #bdc9d5 !important;
+  border: 1.5px solid #aebdcb !important;
   box-shadow: 0 3px 12px rgb(23 42 61 / 7%) !important;
 }
 
@@ -213,7 +219,7 @@
   select,
   textarea
 ) {
-  border: 1px solid #9aabba !important;
+  border: 1px solid #8296a8 !important;
   background-color: #fff !important;
 }
 
@@ -253,7 +259,7 @@
 }
 
 .crm-modal-panel {
-  border: 2px solid #99aaba !important;
+  border: 2px solid #8296a8 !important;
   border-radius: 1.25rem !important;
   background-color: #fff !important;
   box-shadow: 0 28px 80px rgb(5 20 34 / 42%) !important;
