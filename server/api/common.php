@@ -126,7 +126,7 @@ function ensure_schema(): void {
   db()->exec($sql);
 }
 
-function ensure_admin(): void {
+function ensure_admin(): void {\n  ensure_schema();
   $pdo = db();
   $stmt = $pdo->prepare('SELECT id FROM admin_users WHERE email = ? LIMIT 1');
   $stmt->execute([ADMIN_EMAIL]);
