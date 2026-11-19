@@ -280,7 +280,7 @@ function writeAdminSpaFallback() {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Operations Backoffice Â· Omnicore</title>
+  <title>Operations Backoffice Ã‚Â· Omnicore</title>
   ${mainCssFile ? `<link rel="stylesheet" crossorigin href="/assets/${mainCssFile}">` : ""}
   <script>
     window.$R = window.$R || {};
@@ -317,7 +317,10 @@ const htaccessContent = `# =====================================================
   RewriteEngine On
   RewriteBase /
 
-  # Backoffice â€” map /admin before Hostinger/directory rules can 404 it
+  # Block direct access to generated database credentials
+  RewriteRule ^private/ - [F,L]
+
+  # Backoffice Ã¢â‚¬â€ map /admin before Hostinger/directory rules can 404 it
   RewriteRule ^admin$ /admin.html [L]
   RewriteRule ^admin/$ /admin.html [L]
 
