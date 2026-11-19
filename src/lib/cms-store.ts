@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { crmApi } from "@/lib/crm-api";
 import { equipment as initialEquipment, site as initialSite, type Equipment } from "@/data/site";
 
 export type CRMClient = {
@@ -267,6 +268,7 @@ export function saveStoredCRMClients(clients: CRMClient[]) {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEY_CRM, JSON.stringify(clients));
+    void crmApi.saveCRM(clients).catch(() => undefined);
     window.dispatchEvent(new CustomEvent("omnicore-crm-updated"));
   } catch {
     announceStorageError(new Error("Could not save CRM data in this browser."));
@@ -343,6 +345,7 @@ export function saveStoredEquipment(items: ExtendedEquipment[]): boolean {
   if (typeof window === "undefined") return false;
   try {
     localStorage.setItem(STORAGE_KEY_EQUIPMENT, JSON.stringify(items));
+    void crmApi.saveEquipment(items).catch(() => undefined);
     window.dispatchEvent(new CustomEvent("omnicore-equipment-updated"));
     return true;
   } catch {
@@ -367,6 +370,7 @@ export function saveStoredSiteCopy(copy: SiteCopyContent): boolean {
   if (typeof window === "undefined") return false;
   try {
     localStorage.setItem(STORAGE_KEY_SITE_COPY, JSON.stringify(copy));
+    void crmApi.saveSiteCopy(copy).catch(() => undefined);
     window.dispatchEvent(new CustomEvent("omnicore-copy-updated"));
     return true;
   } catch {
@@ -445,6 +449,7 @@ export function saveStoredRecycleBin(items: RecycleBinItem[]) {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEY_RECYCLE, JSON.stringify(items));
+    void crmApi.saveRecycle(items).catch(() => undefined);
     window.dispatchEvent(new CustomEvent("omnicore-recycle-updated"));
   } catch {
     // ignore
@@ -503,6 +508,7 @@ export function saveStoredDeployments(deployments: DeploymentRecord[]) {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEY_DEPLOYMENTS, JSON.stringify(deployments));
+    void crmApi.saveDeployments(deployments).catch(() => undefined);
     window.dispatchEvent(new CustomEvent("omnicore-deployments-updated"));
   } catch {
     announceStorageError(new Error("Could not save deployment data in this browser."));
