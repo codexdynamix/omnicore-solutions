@@ -1624,11 +1624,6 @@ function AdminBackoffice() {
               </span>
             </button>
 
-            <span className="crm-status-indicator whitespace-nowrap rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1.5 text-xs font-semibold text-amber-800 sm:px-3.5">
-              <span className="sm:hidden">MySQL</span>
-              <span className="hidden sm:inline">MySQL · authenticated</span>
-            </span>
-
             <Link
               to="/"
               aria-label="Public Website"
