@@ -163,13 +163,6 @@
   box-shadow: none;
 }
 
-.crm-brand-location {
-  border: 1px solid #e2e7e2;
-  border-radius: 0.4rem !important;
-  background-color: #f3f5f3 !important;
-  color: #5e6b62 !important;
-}
-
 .crm-sidebar-nav {
   gap: 0.25rem !important;
   border: 0 !important;

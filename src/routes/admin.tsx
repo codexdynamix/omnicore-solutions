@@ -1593,10 +1593,6 @@ function AdminBackoffice() {
                   <span className="text-sm font-semibold tracking-tight text-[#1D1D1F]">
                     Omnicore Backoffice
                   </span>
-                  <span className="crm-brand-location rounded-full bg-black/[0.05] px-2 py-0.5 text-[10px] font-medium text-[#6E6E73]">
-                    <span className="sm:hidden">Harare</span>
-                    <span className="hidden sm:inline">Harare Operations</span>
-                  </span>
                 </div>
               </div>
             </Link>
