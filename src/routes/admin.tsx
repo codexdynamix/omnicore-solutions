@@ -278,28 +278,9 @@ function stageChipClass(stage: CRMClient["stage"]) {
 function AdminBackoffice() {
   const [adminProfile, setAdminProfile] = useState<AdminProfile>(getStoredAdminProfile);
   const [profileName, setProfileName] = useState(adminProfile.fullName);
-  const [profileEmail, setProfileEmail] = useState(adminProfile.email);
   const [profileRole, setProfileRole] = useState(adminProfile.role);
   const [profilePhone, setProfilePhone] = useState(adminProfile.phone);
   const [profileLocation, setProfileLocation] = useState(adminProfile.yardLocation);
-
-  function handleSaveProfileDetails(e: React.FormEvent) {
-    e.preventDefault();
-    const updated: AdminProfile = {
-      fullName: profileName.trim(),
-      email: profileEmail.trim(),
-      role: profileRole.trim(),
-      phone: profilePhone.trim(),
-      yardLocation: profileLocation.trim(),
-    };
-    try {
-      const saved = saveStoredAdminProfile(updated);
-      setAdminProfile(saved);
-      triggerToast("Profile details saved in this browser.");
-    } catch (error) {
-      triggerToast(error instanceof Error ? error.message : "Could not save profile details in this browser.");
-    }
-  }
 
   function submitEditingGalleryUrl() {
     if (!editingGalleryUrl.trim()) return;
@@ -319,6 +300,65 @@ function AdminBackoffice() {
   const [accountCurrentPassword, setAccountCurrentPassword] = useState("");
   const [accountEmail, setAccountEmail] = useState(adminProfile.email);
   const [accountPassword, setAccountPassword] = useState("");
+  const credentialsChanged = accountEmail.trim() !== adminProfile.email || accountPassword.length > 0;
+
+  async function handleSaveAccount(e: React.FormEvent) {
+    e.preventDefault();
+    if (credentialsChanged && !accountCurrentPassword) {
+      triggerToast("Enter your current password to change sign-in credentials.");
+      return;
+    }
+
+    const profileDetails = {
+      fullName: profileName.trim(),
+      role: profileRole.trim(),
+      phone: profilePhone.trim(),
+      yardLocation: profileLocation.trim(),
+    };
+    let profileSaved = false;
+
+    try {
+      await crmApi.saveProfile(profileDetails);
+      profileSaved = true;
+      if (credentialsChanged) {
+        await crmApi.changeCredentials(accountCurrentPassword, accountEmail.trim(), accountPassword);
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Could not save account settings.";
+      if (profileSaved) {
+        const savedProfile = { ...adminProfile, ...profileDetails };
+        try {
+          setAdminProfile(saveStoredAdminProfile(savedProfile));
+        } catch (cacheError) {
+          setAdminProfile(savedProfile);
+          const cacheMessage = cacheError instanceof Error ? ` Browser cache error: ${cacheError.message}` : "";
+          triggerToast(`Profile details saved, but sign-in credentials were not changed: ${message}.${cacheMessage}`);
+          return;
+        }
+        triggerToast(`Profile details saved, but sign-in credentials were not changed: ${message}`);
+      } else {
+        triggerToast(message);
+      }
+      return;
+    }
+
+    const updatedProfile = { ...adminProfile, ...profileDetails, email: accountEmail.trim() };
+    try {
+      setAdminProfile(saveStoredAdminProfile(updatedProfile));
+    } catch (error) {
+      setAdminProfile(updatedProfile);
+      triggerToast(
+        error instanceof Error
+          ? `Account settings saved, but the local profile cache could not be updated: ${error.message}`
+          : "Account settings saved, but the local profile cache could not be updated.",
+      );
+      return;
+    }
+
+    setAccountCurrentPassword("");
+    setAccountPassword("");
+    triggerToast(credentialsChanged ? "Account and sign-in settings updated." : "Account details updated.");
+  }
 
   const [activeTab, setActiveTab] = useState<Tab>("crm");
   const [clients, setClients] = useState<CRMClient[]>(getStoredCRMClients);
@@ -825,7 +865,7 @@ function AdminBackoffice() {
       if (data.profile) {
         setAdminProfile(data.profile);
         setProfileName(data.profile.fullName || "");
-        setProfileEmail(data.profile.email || "");
+        setAccountEmail(data.profile.email || "");
         setProfileRole(data.profile.role || "");
         setProfilePhone(data.profile.phone || "");
         setProfileLocation(data.profile.yardLocation || "");
@@ -1571,7 +1611,7 @@ function AdminBackoffice() {
                   ? "bg-[#1D1D1F] text-white"
                   : "bg-[#F5F5F7] text-[#1D1D1F] hover:bg-[#EBEBEB]"
               }`}
-              title="Edit the local workspace profile"
+              title="Manage administrator account settings"
             >
               <span className="size-2 rounded-full bg-emerald-500" />
               <span className={`font-medium ${activeTab === "profile" ? "text-white/90" : "text-[#6E6E73]"}`}>
@@ -1580,7 +1620,7 @@ function AdminBackoffice() {
               <span className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${
                 activeTab === "profile" ? "bg-white/20 text-white" : "bg-black/[0.06] text-[#1D1D1F]"
               }`}>
-                Profile
+                Account
               </span>
             </button>
 
@@ -1614,7 +1654,7 @@ function AdminBackoffice() {
               { id: "cms", label: "Site Content & Copy", icon: FileText },
               { id: "hire", label: "Field Deployments", icon: Truck },
               { id: "recycle", label: "Recycle Bin", icon: Recycle, count: recycleBin.length },
-              { id: "profile", label: "Workspace Profile", icon: ShieldCheck },
+              { id: "profile", label: "Account & Security", icon: ShieldCheck },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -7119,163 +7159,133 @@ function AdminBackoffice() {
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 6: WORKSPACE PROFILE */}
+        {/* TAB 6: ACCOUNT & SECURITY */}
         {/* ========================================================================= */}
         {activeTab === "profile" && (
           <div className="crm-profile-page space-y-6 pb-12">
-            {/* Page Header */}
             <div className="crm-page-heading crm-profile-page-header flex flex-col gap-2 border-b border-black/[0.06] pb-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-2xl font-bold tracking-tight text-[#1D1D1F]">
-                  Workspace Profile
-                </h2>
-                <p className="mt-1 text-xs sm:text-sm text-[#6E6E73]">
-                  These details are saved only in this browser and are not used to sign in.
+                <h2 className="text-2xl font-bold tracking-tight text-[#1D1D1F]">Account &amp; Security</h2>
+                <p className="mt-1 text-xs text-[#6E6E73] sm:text-sm">
+                  Manage your administrator profile and sign-in details in one place.
                 </p>
               </div>
-
-              <div className="flex items-center gap-2">
-                <span className="crm-profile-local-badge rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">
-                  Browser-local workspace
-                </span>
-              </div>
+              <span className="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
+                MySQL account
+              </span>
             </div>
 
-            <div className="crm-profile-panels grid grid-cols-1 gap-6 xl:grid-cols-2 xl:items-start">
-                <section className="crm-profile-card rounded-3xl border border-black/[0.08] bg-white p-6 shadow-xs sm:p-7">
-                  <div className="flex items-center gap-4 border-b border-black/[0.06] pb-5">
-                    <div className="flex size-14 items-center justify-center rounded-2xl bg-[#1D1D1F] text-white text-lg font-bold shadow-xs">
-                      {adminProfile.fullName
-                        .split(" ")
-                        .map((w) => w[0])
-                        .join("")
-                        .slice(0, 2)
-                        .toUpperCase() || "AD"}
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-[#1D1D1F]">{adminProfile.fullName}</h3>
-                      <p className="text-xs text-[#6E6E73]">{adminProfile.role}</p>
-                      <div className="mt-1.5 flex items-center gap-2">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 border border-emerald-200">
-                          <span className="size-1.5 rounded-full bg-emerald-600" />
-                          Local profile
-                        </span>
-                        <span className="text-[11px] text-[#86868B]">Cranborne Operations</span>
-                      </div>
-                    </div>
-                  </div>
+            <section className="crm-profile-card max-w-4xl rounded-3xl border border-black/[0.08] bg-white p-6 shadow-xs sm:p-7">
+              <div className="flex items-center gap-4 border-b border-black/[0.06] pb-5">
+                <div className="flex size-14 items-center justify-center rounded-2xl bg-[#1D1D1F] text-lg font-bold text-white shadow-xs">
+                  {adminProfile.fullName
+                    .split(" ")
+                    .map((word) => word[0])
+                    .join("")
+                    .slice(0, 2)
+                    .toUpperCase() || "AD"}
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-[#1D1D1F]">{adminProfile.fullName || "CRM Administrator"}</h3>
+                  <p className="text-xs text-[#6E6E73]">{adminProfile.role || "Administrator"}</p>
+                </div>
+              </div>
 
-                  <form onSubmit={handleSaveProfileDetails} className="mt-5 space-y-4 text-xs">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block font-semibold text-[#1D1D1F] mb-1">
-                          Full Name
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={profileName}
-                          onChange={(e) => setProfileName(e.target.value)}
-                          className="w-full h-9.5 rounded-xl border border-black/[0.12] bg-[#F9F9FB] px-3 text-xs text-[#1D1D1F] focus:border-black focus:bg-white focus:outline-none transition-all"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block font-semibold text-[#1D1D1F] mb-1">
-                          Contact Email
-                        </label>
-                        <input
-                          type="email"
-                          required
-                          value={profileEmail}
-                          onChange={(e) => setProfileEmail(e.target.value)}
-                          className="w-full h-9.5 rounded-xl border border-black/[0.12] bg-[#F9F9FB] px-3 text-xs text-[#1D1D1F] focus:border-black focus:bg-white focus:outline-none transition-all"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block font-semibold text-[#1D1D1F] mb-1">
-                          Department / Title
-                        </label>
-                        <input
-                          type="text"
-                          value={profileRole}
-                          onChange={(e) => setProfileRole(e.target.value)}
-                          className="w-full h-9.5 rounded-xl border border-black/[0.12] bg-[#F9F9FB] px-3 text-xs text-[#1D1D1F] focus:border-black focus:bg-white focus:outline-none transition-all"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block font-semibold text-[#1D1D1F] mb-1">
-                          Direct Phone / WhatsApp
-                        </label>
-                        <input
-                          type="text"
-                          value={profilePhone}
-                          onChange={(e) => setProfilePhone(e.target.value)}
-                          className="w-full h-9.5 rounded-xl border border-black/[0.12] bg-[#F9F9FB] px-3 text-xs text-[#1D1D1F] focus:border-black focus:bg-white focus:outline-none transition-all"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block font-semibold text-[#1D1D1F] mb-1">
-                        Yard Location
-                      </label>
+              <form onSubmit={handleSaveAccount} className="mt-5 space-y-6 text-xs">
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold text-[#1D1D1F]">Profile details</h4>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <label className="block font-semibold text-[#1D1D1F]">
+                      Full name
+                      <input
+                        type="text"
+                        required
+                        value={profileName}
+                        onChange={(event) => setProfileName(event.target.value)}
+                        className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] bg-[#F9F9FB] px-3 text-xs text-[#1D1D1F] transition-all focus:border-black focus:bg-white focus:outline-none"
+                      />
+                    </label>
+                    <label className="block font-semibold text-[#1D1D1F]">
+                      Department / title
+                      <input
+                        type="text"
+                        value={profileRole}
+                        onChange={(event) => setProfileRole(event.target.value)}
+                        className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] bg-[#F9F9FB] px-3 text-xs text-[#1D1D1F] transition-all focus:border-black focus:bg-white focus:outline-none"
+                      />
+                    </label>
+                    <label className="block font-semibold text-[#1D1D1F]">
+                      Direct phone / WhatsApp
+                      <input
+                        type="text"
+                        value={profilePhone}
+                        onChange={(event) => setProfilePhone(event.target.value)}
+                        className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] bg-[#F9F9FB] px-3 text-xs text-[#1D1D1F] transition-all focus:border-black focus:bg-white focus:outline-none"
+                      />
+                    </label>
+                    <label className="block font-semibold text-[#1D1D1F]">
+                      Yard location
                       <input
                         type="text"
                         value={profileLocation}
-                        onChange={(e) => setProfileLocation(e.target.value)}
-                        className="w-full h-9.5 rounded-xl border border-black/[0.12] bg-[#F9F9FB] px-3 text-xs text-[#1D1D1F] focus:border-black focus:bg-white focus:outline-none transition-all"
+                        onChange={(event) => setProfileLocation(event.target.value)}
+                        className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] bg-[#F9F9FB] px-3 text-xs text-[#1D1D1F] transition-all focus:border-black focus:bg-white focus:outline-none"
                       />
-                    </div>
+                    </label>
+                  </div>
+                </div>
 
-                    <div className="pt-2 flex justify-end">
-                      <button
-                        type="submit"
-                        className="inline-flex h-9.5 items-center justify-center rounded-xl bg-[#1D1D1F] px-5 text-xs font-semibold text-white shadow-2xs hover:bg-black transition-all cursor-pointer"
-                      >
-                        Save Profile Details
-                      </button>
-                    </div>
-                  </form>
-                </section>
-                <section className="crm-profile-security rounded-3xl border border-black/[0.08] bg-white p-6 shadow-xs sm:p-7">
-                    <h3 className="text-sm font-semibold text-[#1D1D1F]">Administrator credentials</h3>
-                    <p className="mt-1 text-xs text-[#86868B]">Change the email or password used to sign in to this CRM.</p>
-                    <form
-                      onSubmit={async (event) => {
-                        event.preventDefault();
-                        try {
-                          await crmApi.changeCredentials(accountCurrentPassword, accountEmail, accountPassword);
-                          setAccountCurrentPassword("");
-                          setAccountPassword("");
-                          setProfileEmail(accountEmail);
-                          triggerToast("Administrator credentials updated.");
-                        } catch (error) {
-                          triggerToast(error instanceof Error ? error.message : "Could not update credentials.");
-                        }
-                      }}
-                      className="mt-4 grid grid-cols-1 gap-3 text-xs sm:grid-cols-2"
-                    >
-                      <label className="font-medium">
-                        Administrator email
-                        <input type="email" required value={accountEmail} onChange={(e) => setAccountEmail(e.target.value)} className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] px-3" />
-                      </label>
-                      <label className="font-medium">
-                        Current password
-                        <input type="password" required value={accountCurrentPassword} onChange={(e) => setAccountCurrentPassword(e.target.value)} className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] px-3" />
-                      </label>
-                      <label className="font-medium sm:col-span-2">
-                        New password <span className="font-normal text-[#86868B]">(leave blank to keep it unchanged)</span>
-                        <input type="password" minLength={8} value={accountPassword} onChange={(e) => setAccountPassword(e.target.value)} className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] px-3" />
-                      </label>
-                      <div className="sm:col-span-2 flex justify-end">
-                        <button type="submit" className="h-9.5 rounded-xl bg-[#1D1D1F] px-5 text-xs font-semibold text-white">Update credentials</button>
-                      </div>
-                    </form>
-                </section>
-            </div>
+                <div className="space-y-4 border-t border-black/[0.06] pt-5">
+                  <div>
+                    <h4 className="text-sm font-semibold text-[#1D1D1F]">Sign-in credentials</h4>
+                    <p className="mt-1 text-xs text-[#6E6E73]">
+                      Your current password is needed only when changing your sign-in email or password.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <label className="block font-semibold text-[#1D1D1F]">
+                      Administrator email
+                      <input
+                        type="email"
+                        required
+                        value={accountEmail}
+                        onChange={(event) => setAccountEmail(event.target.value)}
+                        className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] px-3"
+                      />
+                    </label>
+                    <label className="block font-semibold text-[#1D1D1F]">
+                      Current password
+                      <input
+                        type="password"
+                        required={credentialsChanged}
+                        value={accountCurrentPassword}
+                        onChange={(event) => setAccountCurrentPassword(event.target.value)}
+                        className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] px-3"
+                      />
+                    </label>
+                    <label className="block font-semibold text-[#1D1D1F] sm:col-span-2">
+                      New password <span className="font-normal text-[#86868B]">(leave blank to keep it unchanged)</span>
+                      <input
+                        type="password"
+                        minLength={8}
+                        value={accountPassword}
+                        onChange={(event) => setAccountPassword(event.target.value)}
+                        className="mt-1 h-9.5 w-full rounded-xl border border-black/[0.12] px-3"
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex justify-end border-t border-black/[0.06] pt-5">
+                  <button
+                    type="submit"
+                    className="inline-flex h-10 items-center justify-center rounded-xl bg-[#1D1D1F] px-5 text-xs font-semibold text-white transition-colors hover:bg-black"
+                  >
+                    Save account changes
+                  </button>
+                </div>
+              </form>
+            </section>
           </div>
         )}
       </main>

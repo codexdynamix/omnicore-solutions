@@ -1,9 +1,3 @@
-/**
- * Stores the local-only backoffice profile for this browser.
- */
-
-import { crmApi } from "@/lib/crm-api";
-
 export interface AdminProfile {
   email: string;
   fullName: string;
@@ -41,7 +35,6 @@ export function saveStoredAdminProfile(profile: Partial<AdminProfile>): AdminPro
   const updated: AdminProfile = { ...current, ...profile };
   if (typeof window !== "undefined") {
     localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(updated));
-    void crmApi.saveProfile(updated).catch(() => undefined);
   }
   return updated;
 }

@@ -50,7 +50,7 @@ if ($action === 'save-recycle' && $method === 'POST') {
 }
 
 if ($action === 'save-profile' && $method === 'POST') {
-  $v=$body['profile'] ?? []; $stmt=$pdo->prepare('UPDATE admin_users SET email=?,full_name=?,role=?,phone=?,yard_location=? WHERE id=?'); $stmt->execute([(string)($v['email']??''),(string)($v['fullName']??''),(string)($v['role']??''),(string)($v['phone']??''),(string)($v['yardLocation']??''),$_SESSION['admin_id']]); json_response(['ok'=>true]);
+  $v=$body['profile'] ?? []; $stmt=$pdo->prepare('UPDATE admin_users SET full_name=?,role=?,phone=?,yard_location=? WHERE id=?'); $stmt->execute([(string)($v['fullName']??''),(string)($v['role']??''),(string)($v['phone']??''),(string)($v['yardLocation']??''),$_SESSION['admin_id']]); json_response(['ok'=>true]);
 }
 
 if ($action === 'save-site-copy' && $method === 'POST') {
