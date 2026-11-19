@@ -1,5 +1,7 @@
 <?php
 declare(strict_types=1);
+ini_set('display_errors','0');
+error_reporting(E_ALL);
 
 session_set_cookie_params(['lifetime'=>0,'path'=>'/','secure'=>(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),'httponly'=>true,'samesite'=>'Strict']);
 session_start();
